@@ -138,14 +138,25 @@ app.get("/users", validSession, async (req, res) => {
 // --------------------- CREW POSITION ENDPOINTS ----------------------------
 
 // GET crew_positions: gets all crew_positions
-//app.get("/crew_positions", validSession, async (req, res) => {
 app.get("/crew_positions", async (req, res) => {
   try {
-      const crew_positions = await knex('crew_positions');
-      res.status(200).send(crew_positions);
+    const crew_positions = await knex('crew_positions');
+    res.status(200).send(crew_positions);
   } catch(err) {
-      console.log(err);
-      res.status(500).json(err.message);
+    console.log(err);
+    res.status(500).json(err.message);
+  }
+})
+
+// GET crew_positions by ID: gets all crew_positions
+app.get("/crew_positions/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const crew_positions = await knex('crew_positions').where('id', id);
+    res.status(200).send(crew_positions);
+  } catch(err) {
+    console.log(err);
+    res.status(500).json(err.message);
   }
 })
 
@@ -172,7 +183,10 @@ app.get("/time_slots", validSession, async (req, res) => {
   const user = req.session.user;
   try {
     if (need_replacement === 'true') {
-      const time_slots = await knex('time_slots').where('type', 'replacement_needed');
+      const time_slots = await knex('time_slots')
+                                 .join('crew_positions', 'time_slots.crew_position_id', 'crew_positions.id')
+                                 .select('*', 'crew_positions.name', 'time_slots.description', 'time_slots.id')
+                                 .where('type', 'replacement_needed');
       res.status(200).send(time_slots);
     }
     else if(user.role === "leader") {
@@ -181,7 +195,7 @@ app.get("/time_slots", validSession, async (req, res) => {
     } else {
       const time_slots = await knex('time_slots')
                                 .join('crew_positions', 'time_slots.crew_position_id', 'crew_positions.id')
-                                .select('time_slots.id', 'time_slots.description', 'start_datetime', 'end_datetime', 'type', 'crew_positions.name')
+                                .select('*', 'crew_positions.name', 'time_slots.description', 'time_slots.id')
                                 .where('user_id', user.id);
       res.status(200).send(time_slots);
     }
