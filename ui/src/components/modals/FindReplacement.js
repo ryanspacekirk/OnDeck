@@ -21,6 +21,7 @@ const style = {
   overflow: 'scroll',
   flexDirection: 'column',
   justifyContent: 'space-evenly',
+   
 };
 
 
@@ -50,11 +51,15 @@ const FindReplacement = ({ showFindReplacement, shiftSelected, shift, members })
       <Modal
     open={findReplacementOpen}
     onClose={handleFindReplacementClose}
-    sx={{overflow:'scroll'}}
+    
+    sx={{ mt:'10vh', overflow:'scroll'}
+    }
+    
     
     >
       <Box sx={style} >
-      <Typography sx={{textAlign: 'center', marginBottom: '20px'}} variant="h4" fontWeight='bold'>
+      
+      <Typography sx={{textAlign: 'center', marginBottom: '20px', marginTop:'800px'}} variant="h4" fontWeight='bold'>
           Possible Replacement
         </Typography>
         <Box sx={{display: 'flex', flexDirection: "row", justifyContent: 'space-between', marginBottom: '10px'}}>
@@ -65,22 +70,19 @@ const FindReplacement = ({ showFindReplacement, shiftSelected, shift, members })
 
         
       </Box> 
-      <EligibleMemberCard member={members[0]} />
-      <EligibleMemberCard member={members[0]} />
-      <EligibleMemberCard member={members[0]} />
-      <EligibleMemberCard member={members[0]} />
+      
       
 
 
-        {/* <Grid container spacing={2}>
+        <Grid container spacing={2}>
           {eligibleMembers.map((member) => {
             return (
             <Grid item xs={12}>
-              <EligibleMemberCard member={member} />
+              <EligibleMemberCard member={member} replacementShift={shift}  />
             </Grid>
             );
         })}
-        </Grid> */}
+        </Grid>
        
       </Box>
     </Modal>

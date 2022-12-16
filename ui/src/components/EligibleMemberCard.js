@@ -17,22 +17,31 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-const EligibleMemberCard = ({ member }) => {
+const EligibleMemberCard = ({ member, replacementShift }) => {
   let [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   }
 
+  const handleReassign = () => {
+    console.log('Reassignment activated');
+    console.log('Assigned: ', memberString(member), ' to ', replacementShift);
+    
+  }
+
   return(
     <div className="EligibleMemberCard">
       <Card>
-        {memberString(member)}
+        
 
         <CardActions disableSpacing>
+        {memberString(member)}
           <ExpandMore 
             expand={expanded}
             onClick={handleExpandClick}
+            aria-expanded={expanded}
+            aria-label="show more"
           >
             <ExpandMoreIcon />
           </ExpandMore>
@@ -44,7 +53,7 @@ const EligibleMemberCard = ({ member }) => {
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
             Test content
-            <Button>Assign</Button>
+            <Button onClick={handleReassign}>Assign</Button>
           </CardContent>
 
 

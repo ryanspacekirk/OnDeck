@@ -1,10 +1,10 @@
 import { Container, Typography } from '@mui/material';
 import  { useContext, useEffect, useState } from "react";
-import { MenuItem, Select, Box, Grid, Item } from "@mui/material";
+import { MenuItem, Select, Box, Grid, Item, Card } from "@mui/material";
 import { Context } from '../App';
 import axios from "axios";
 import '../App.css';
-
+import { doubleFilter, generateOverview } from '../helpers';
 import ReplacementShift from '../components/ReplacementShift';
 import FindReplacement from '../components/modals/FindReplacement';
 import Blank from '../components/Blank';
@@ -12,22 +12,6 @@ import config from '../config';
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
 
 
-const doubleFilter = async(members, shifts) => {
-  let tempList = [];
-  
-
-  shifts.forEach((shift) => {
-    members.forEach((member) => {
-       if(member.id === shift.user_id){
-        tempList.push(member);
-       }
-    })
-  })
-
-
-  
-  return tempList;
-}
 
 
 
@@ -39,6 +23,15 @@ const LeaderProfile = () => {
   let [crewPositions, setCrewPositions] = useState([]);
   let [memberList, setMemberList] = useState([]);
   let [membersRequesting, setMembersRequesting] = useState([]);
+  let [overviewData, setOverivewData] = useState({
+    numCommander: -1,
+    numSVO: -1,
+    numGSO: -1,
+    numCommanderAvail: -1,
+    numSVOAvail: -1,
+    numGSOAvail: -1
+  });
+
   let [shiftSelected, setShiftSelected] = useState(-1);
   let [showFindReplacement, setShowFindReplacement] = useState(false);
 
@@ -73,11 +66,33 @@ const LeaderProfile = () => {
           getCrewPositions();
 
         getShiftsNeedingReplacements();
+
+        const getMembers = async () => {
+          try{
+            let res = await axios.get(ApiUrl + '/users?member', {withCredentials:true});
+            setMemberList(res.data);
+          } catch(e){
+            console.log('Error finding members  in LeaderProfile:', e);
+  
+          }
+        }
+        getMembers();
+        
+
+
+
         
     }, []);
 
+    useEffect(()=>{
+      generateOverview(memberList, setOverivewData);
+
+
+    }, [memberList])
+
     useEffect(() => {
       console.log('Shift Triggered');
+      console.log('Shift selected: ', shiftSelected);
       if(shiftSelected !== -1){
         setShowFindReplacement(true);
 
@@ -106,6 +121,7 @@ const LeaderProfile = () => {
           console.log('Error finding members needing replacements in LeaderProfile:', e);
 
         }
+        
       }
       getMembersNeedingReplacements();
 
@@ -118,15 +134,31 @@ const LeaderProfile = () => {
       <div className='LeaderProfile'>
         <Container>
           <Box>
-            <Grid container spacing={2}>
-              <Grid item xs={12} md={6}>
-                <Box>
-                  <Typography>Shifts that need to be filled!</Typography>
-                  {shiftsNeedingReplacements.map(shift => <ReplacementShift replacementRequest={shift} crewPositions={crewPositions} membersRequesting={membersRequesting} memberList={memberList} setShift={setShiftSelected} />)}
-
-                </Box>
-                <Typography>Shifts selected:{shiftSelected.id}</Typography>
+          <Typography>Shifts that need to be filled!</Typography>
+          <Box>
+            <Grid container spacing={2} >
+              <Grid item xs={4}>
+                <Card> Total # of commanders {overviewData.numCommander}</Card>
               </Grid>
+              <Grid item xs={4}>
+                <Card> Total # of SVOs {overviewData.numSVO}</Card>
+              </Grid>
+              <Grid item xs={4}>
+                <Card> Total # of GSOs {overviewData.numGSO}</Card>
+              </Grid>
+            </Grid>
+          </Box>
+            <Grid container spacing={2} mt={2}>
+                {shiftsNeedingReplacements.map(shift => {
+                  return(
+                    <Grid item xs={6} >
+                      <ReplacementShift replacementRequest={shift} crewPositions={crewPositions} membersRequesting={membersRequesting} memberList={memberList} setShift={setShiftSelected} />
+                    </Grid>
+                  )
+                  
+                })} 
+                
+              
             </Grid>
 
             
