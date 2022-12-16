@@ -1,11 +1,11 @@
-import '../App.css'
+// import '../App.css'
 
-const Signup = () => {
-    return (
-        <div className='Signup'>
+// const Signup = () => {
+//     return (
+//         <div className='Signup'>
 
-        </div>
-    )
-}
+//         </div>
+//     )
+// }
 
-export default Signup;
+// export default Signup;
