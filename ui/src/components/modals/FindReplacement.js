@@ -1,8 +1,10 @@
-import { Box, Typography, Button, FormHelperText, Modal, TextField,  FormControl} from "@mui/material";
-import { useState } from "react"
+import { Box, Typography, Button, FormHelperText, Modal, TextField,  FormControl, Grid} from "@mui/material";
+import { useEffect, useState } from "react"
 import RankSelect from "../RankSelect";
 import PositonSelector from "../PositionSelector";
+import EligibleMemberCard from "../EligibleMemberCard";
 import config from '../../config'
+import { dateInfo, timeInfo, returnMemberDetail } from "../../helpers";
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
 
 const style = {
@@ -16,16 +18,16 @@ const style = {
   boxShadow: 24,
   p: 4,
   display: 'flex',
+  overflow: 'scroll',
   flexDirection: 'column',
   justifyContent: 'space-evenly',
 };
 
 
 
-
-
-const FindReplacement = ({ showFindReplacement, shiftSelected }) => {
+const FindReplacement = ({ showFindReplacement, shiftSelected, shift, members }) => {
   let [findReplacementOpen, setFindReplacementOpen] = useState(true);
+  let [eligibleMembers, setEligibleMembers] = useState([]);
 
   const handleFindReplacementClose = () => {
     setFindReplacementOpen(false);
@@ -38,23 +40,53 @@ const FindReplacement = ({ showFindReplacement, shiftSelected }) => {
     
   }
 
+  useEffect(() =>{
+    setEligibleMembers(members);
+  }, []);
+
 
   return(
-    <Modal
+    <Box sx={{overflowY: "scroll"}}>
+      <Modal
     open={findReplacementOpen}
     onClose={handleFindReplacementClose}
+    sx={{overflow:'scroll'}}
+    
     >
-      <Box sx={style} component="form" onSubmit={handleSubmit}>
+      <Box sx={style} >
       <Typography sx={{textAlign: 'center', marginBottom: '20px'}} variant="h4" fontWeight='bold'>
-          Potential Replacement
+          Possible Replacement
         </Typography>
         <Box sx={{display: 'flex', flexDirection: "row", justifyContent: 'space-between', marginBottom: '10px'}}>
-          
-          
-        </Box> 
+        <Typography sx={{textAlign: 'center', marginBottom: '20px'}} variant="h6" >
+          for {returnMemberDetail(shift.user_id, members)} on {dateInfo(shift.start_datetime)} at {timeInfo(shift.start_datetime)}
+        </Typography>
+        
+
+        
+      </Box> 
+      <EligibleMemberCard member={members[0]} />
+      <EligibleMemberCard member={members[0]} />
+      <EligibleMemberCard member={members[0]} />
+      <EligibleMemberCard member={members[0]} />
+      
+
+
+        {/* <Grid container spacing={2}>
+          {eligibleMembers.map((member) => {
+            return (
+            <Grid item xs={12}>
+              <EligibleMemberCard member={member} />
+            </Grid>
+            );
+        })}
+        </Grid> */}
        
       </Box>
     </Modal>
+
+    </Box>
+    
   );
 
 

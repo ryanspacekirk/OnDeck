@@ -23,6 +23,7 @@
     "devextreme": "^22.2.3",
     "devextreme-react": "^22.2.3",
     "fullcalendar": "^5.11.3",
+    "i": "^0.3.7",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.0.1",
     "react-dom": "^18.2.0",
