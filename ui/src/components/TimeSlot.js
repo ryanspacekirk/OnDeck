@@ -44,7 +44,7 @@ export const TimeSlot = ({ slot, type, toggleRefresh }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({type: 'replacement_needed', user_id: user.id}),
+          body: JSON.stringify({type: 'pending_replacement', user_id: user.id}),
         })
         const resJson = await res.json();
   
@@ -52,6 +52,7 @@ export const TimeSlot = ({ slot, type, toggleRefresh }) => {
           alert(resJson)
           return;
         }
+        alert('Your request to drop this shift is now pending leadership approval. You will be notified of your leadership\'s the decision upon approval.')
         toggleRefresh();
       } catch(err) {
         console.log(err);
