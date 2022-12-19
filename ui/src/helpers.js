@@ -91,3 +91,29 @@ export const memberCurrentlyAvailable = async(member) => {
 
 
 }
+
+export const leaderPending = async (memberList, setLeadersPending) =>{
+  let leadersNeedingApproval = [];
+
+  leadersNeedingApproval = memberList.filter((member) => member.role === 'pending' );
+  console.log('People needing approval:', leadersNeedingApproval);
+  setLeadersPending(leadersNeedingApproval);
+
+}
+
+export const filterPending = async (all, setPending) => {
+  let shiftsNeedignApproval = [];
+  shiftsNeedignApproval = all.filter((shift) => shift.type === "pending_replacement");
+  setPending(shiftsNeedignApproval);
+
+}
+
+export const matchMember = async (memebrs, shift, setMemebr) => {
+  let returnMember;
+  memebrs.forEach((member) => {
+    if(shift.user_id === member.id){
+      returnMember = member;
+    }
+  });
+  setMemebr(returnMember);
+}

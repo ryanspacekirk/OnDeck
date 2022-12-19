@@ -1,7 +1,7 @@
 import { Button, Card, CardActionArea, CardActions, CardContent, CardHeader, Collapse, Stack, Typography } from "@mui/material";
 import  { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { dateInfo, returnMemberDetail } from "../helpers";
+import { dateInfo, returnMemberDetail, matchMember } from "../helpers";
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
@@ -24,57 +24,38 @@ const ExpandMore = styled((props) => {
 }));
 
 
-const ApprovalRequest = ({ leader, setMembers }) => {
-  
+const ApprovalRequestShift = ({ shift, setPending, members }) => {
+
 
   let [expanded, setExpanded] = useState(false);
+  let [specificMember, setSpecificMember] = useState({});
+
+  useEffect(() => {
+    matchMember(members, shift, setSpecificMember);
+
+  }, []);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   }
 
   const handleApprove = () => {
-
-    const upgradeLeader = async () => {
-      let leaderBody = leader;
-      leaderBody.role = "leader";
-      let res = await axios.patch(ApiUrl + `/users/${leader.id}`, leaderBody, {withCredentials:true});
-      let newMemberList = await axios.get(ApiUrl + '/users?member', {withCredentials:true});
-      setMembers(newMemberList.data);
-
-      
-
-    }
-    upgradeLeader();
-    
-    
-
+    console.log('Submit clicked on: ', specificMember.first_name);
+    //approve there shift by making a simple
   }
 
   const handleDeny = () => {
-    console.log('Request Denied');
-
-    const downgradeLeader = async () => {
-      let memberBody = leader;
-      memberBody.role = "member";
-      let res = await axios.patch(ApiUrl + `/users/${leader.id}`, memberBody, {withCredentials:true});
-      let newMemberList = await axios.get(ApiUrl + '/users?member', {withCredentials:true});
-      setMembers(newMemberList.data);
-    }
-    downgradeLeader();
-
+    console.log('Deny clicked for clicked on: ', specificMember.first_name);
 
   }
 
-  useEffect(() => {
-    
 
-  }, []);
+
 
   return(
     <Card>
       <CardActions disableSpacing>
-        {leader.first_name} {leader.last_name}
+        {specificMember.first_name} {specificMember.last_name}
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -88,24 +69,24 @@ const ApprovalRequest = ({ leader, setMembers }) => {
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
           <Typography mt={1}>
-            Requesting to be assigned as a member of the leadership team.
+            Requesting to find a replacement for their upcomming shift on {dateInfo(shift.start_datetime)}.
           </Typography>
 
           <Typography mt={1}>
-            Rank: {leader.rank}
+            Rank: {specificMember.rank}
           </Typography>
 
           <Typography mt={1}>
-            Email: {leader.email}
+            Crew Position: {specificMember.email}
           </Typography>
 
           <Typography mt={1} mb={1}>
-            Date Submitted: {dateInfo(leader.updated_at)}
+            Date Submitted: {dateInfo(shift.updated_at)}
           </Typography>
 
           <Stack direction='row' spacing={2} mt={2}>
-            <Button onClick={handleApprove} variant="contained" color="success">Approve</Button>
-            <Button onClick={handleDeny} variant="contained" color="error">Deny</Button>
+            <Button onClick={handleApprove}  variant="contained" color="success">Approve</Button>
+            <Button onClick={handleDeny}  variant="contained" color="error">Deny</Button>
 
           </Stack>
           
@@ -118,9 +99,8 @@ const ApprovalRequest = ({ leader, setMembers }) => {
 
   )
 
-  
-
-
 }
 
-export default ApprovalRequest;
+
+
+export default ApprovalRequestShift;

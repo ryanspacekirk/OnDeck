@@ -74,8 +74,16 @@ exports.seed = async function(knex) {
      
      member.username = await faker.internet.userName(member.first_name, member.last_name);
 
-     if(isLeader){
+     if(isLeader === 0){
       member.role = 'leader'
+     }
+
+     else if(isLeader === 1){
+      member.role = 'pending'
+     }
+
+     else{
+      member.role = 'member'
      }
      
 
@@ -100,38 +108,44 @@ exports.seed = async function(knex) {
     // { first_name: '', last_name: '', email: '', phone_number: '', role:'', rank: '', username: '', passwordHash: '', crew_position_id: '', created_at:knex.fn.now() , updated_at:knex.fn.now()  },
     
     //Leadership
-    await createMember(0, true),
+    await createMember(0, 0),
+    await createMember(0, 0),
+
+    await createMember(0, 1),
+    await createMember(0, 1),
+    await createMember(0, 1),
+
    
     //One crew is a collection of three create members, one with 0 passed in, one with 1 passed in, and one with 2 passed in
     //ALPHA Crew
-    await createMember(0, false),
-    await createMember(1, false),
-    await createMember(2, false),
+    await createMember(0, 2),
+    await createMember(1, 2),
+    await createMember(2, 2),
 
     //Bravo Crew
-    await createMember(0, false),
-    await createMember(1, false),
-    await createMember(2, false),
+    await createMember(0, 2),
+    await createMember(1, 2),
+    await createMember(2, 2),
 
     //Charlie Crew
-    await createMember(0, false),
-    await createMember(1, false),
-    await createMember(2, false),
+    await createMember(0, 2),
+    await createMember(1, 2),
+    await createMember(2, 2),
 
     //Delta Crew
-    await createMember(0, false),
-    await createMember(1, false),
-    await createMember(2, false),
+    await createMember(0, 2),
+    await createMember(1, 2),
+    await createMember(2, 2),
 
     //Echo Crew
-    await createMember(0, false),
-    await createMember(1, false),
-    await createMember(2, false),
+    await createMember(0, 2),
+    await createMember(1, 2),
+    await createMember(2, 2),
 
     //Foxtrot Crew
-    await createMember(0, false),
-    await createMember(1, false),
-    await createMember(2, false)
+    await createMember(0, 2),
+    await createMember(1, 2),
+    await createMember(2, 2)
 
 
     

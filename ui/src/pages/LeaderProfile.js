@@ -2,13 +2,14 @@ import { Container, Typography } from '@mui/material';
 import  { useContext, useEffect, useState } from "react";
 import { MenuItem, Select, Box, Grid, Item, Card } from "@mui/material";
 import { Context } from '../App';
-import axios from "axios";
+import axios, { all } from "axios";
 import '../App.css';
-import { doubleFilter, generateOverview, memberCurrentlyAvailable } from '../helpers';
+import { doubleFilter, generateOverview, memberCurrentlyAvailable, leaderPending, filterPending } from '../helpers';
 import ReplacementShift from '../components/ReplacementShift';
 import FindReplacement from '../components/modals/FindReplacement';
 import Blank from '../components/Blank';
 import ApprovalRequest from '../components/ApprovalRequest';
+import ApprovalRequestShift from '../components/ApprovalRequestShift';
 import config from '../config';
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
 
@@ -36,10 +37,15 @@ const LeaderProfile = () => {
   let [shiftSelected, setShiftSelected] = useState(-1);
   let [showFindReplacement, setShowFindReplacement] = useState(false);
 
+  let [leadersPending, setLeadersPending] = useState([]);
+  let [approvalsPending, setApprovalsPending] = useState([]);
+  let [allShifts, setAllShifts] = useState([]);
+
   useEffect(() => {
     const getShiftsNeedingReplacements = async () =>{
       try{
       let res = await axios.get(ApiUrl + '/time_slots', {withCredentials:true});
+      setAllShifts(res.data);
       
       let replacementList = res.data.filter(shift => shift.type === 'replacement_needed');
       setShiftsNeedingReplacements(replacementList);
@@ -89,6 +95,13 @@ const LeaderProfile = () => {
 
     useEffect(()=>{
       generateOverview(memberList, setOverivewData);
+      console.log('Member List:', memberList);
+      leaderPending(memberList, setLeadersPending);
+      console.log('Leaders pending', leadersPending);
+      //shiftspendings
+      console.log('All Shifts', allShifts);
+      filterPending(allShifts, setApprovalsPending);
+
 
 
     }, [memberList])
@@ -169,13 +182,26 @@ const LeaderProfile = () => {
                 <p>Leadership input required</p>
               </Card>
               <Grid container spacing={2} mt={2}>
-                <Grid item xs={6}>
-                  <ApprovalRequest />
-                </Grid>
-                <Grid item xs={6}>
-                <ApprovalRequest />
-                </Grid>
-                {/* Items needing approval... need to map through all the items */}
+                {leadersPending.map((leader) => {
+                  return(
+                    <Grid item xs={6}>
+                      <ApprovalRequest leader={leader} setPending={setMemberList}/>
+                    </Grid>
+
+                  );
+                })}
+                
+              </Grid>
+
+              <Grid container spacing={2} mt={2}>
+                {approvalsPending.map((shift) => {
+                  return(
+                    <Grid item xs={6}>
+                      <ApprovalRequestShift shift={shift} setPending={setApprovalsPending} members={memberList}/>
+                    </Grid>
+
+                  );
+                })}
                 
               </Grid>
               </Grid>
