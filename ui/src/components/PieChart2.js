@@ -25,7 +25,7 @@ export default function PieChart2({ data }) {
             id="pie"
             dataSource={data}
             palette="Bright"
-            title="Shift overview"
+            title=""
             onPointClick={pointClickHandler}
             onLegendClick={legendClickHandler}
         >
@@ -38,8 +38,8 @@ export default function PieChart2({ data }) {
                 </Label>
             </Series>
 
-            <Size width={1000} height={500}/>
-            <Legend
+            <Size width={500} height={400}/>
+            <Legend 
                 horizontalAlignment="right"
                 verticalAlignment="top"
             />

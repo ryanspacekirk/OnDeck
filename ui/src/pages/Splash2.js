@@ -1,35 +1,45 @@
 import '../App.css'
-import { useState, useEffect } from "react"
+import { Context } from '../App';
+import { useContext, useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
-import { Grid } from "@mui/material";
-import axios from "axios";
+import { Grid, Box, Button, Typography, Card } from "@mui/material";
 import BarChart2 from "../components/BarChart2";
 import PieChart2 from '../components/PieChart2';
 import config from '../config';
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || 'development'].apiUrl;
-// import Paper from '@mui/material/Paper';
+
+//FOLLOWING COMMANDS NEEDED FOR GRAPHS TO WORK
+// npm i devextreme
+// npm i devextreme-react 
+
 
 const Splash2 = () => {
 
-    const [shiftData, setShiftData] = useState([]);
+    const { user } = useContext(Context);
+    const [timeSlots, setTimeSlots] = useState([]);
+    const [replacementTimeSlots, setReplacementTimeSlots] = useState([]);
+    const navigate = useNavigate();
+    const [pieChartData, setPieChartData] = useState([]);
 
     useEffect(() => {
-
-        const getShiftData = async () => {
+        const getTimeSlots = async () => {
             try {
-                let res = await axios.get(ApiUrl + '/time_slots', { withCredentials: true });
-                console.log('Response: ', res.data);
-                // let replacementList = res.data.filter(shift => shift.type === 'replacement_needed');
-                // setShiftsNeedingReplacements(replacementList);
-            } catch (e) {
-                console.log('Error fetching shifts needing replacement from a leader profile: ', e);
-            }
+                let res = await fetch(ApiUrl + '/time_slots', { credentials: 'include' });
+                let resJson = await res.json();
+                if (res.status !== 200) alert(resJson);
+                resJson = resJson.filter(slot => slot.type === 'shift').sort((a, b) => new Date(a.start_datetime) - new Date(b.start_datetime));
+                setTimeSlots(resJson);
+
+                res = await fetch(ApiUrl + '/time_slots?need_replacement=true', { credentials: 'include' });
+                resJson = await res.json();
+                if (res.status !== 200) alert(resJson);
+                setReplacementTimeSlots(resJson);
+
+            } catch (err) { console.log(err) }
         }
-        getShiftData()
-    }, [])
+        if (user !== null) getTimeSlots();
 
-
-    const navigate = useNavigate();
+    }, [user])
 
     const goodBoyData = [
         { name: "Spc1 Timmy", status: 6 },
@@ -49,37 +59,54 @@ const Splash2 = () => {
         { name: "SSgt Sally", status: 1 },
     ];
 
-    const sampleShift = [
-        { type: 'Shift', area: 12 },
-        { type: 'Absent', area: 4 },
-        { type: 'Replacement Needed', area: 7 },
-        { type: 'Unavailable', area: 5 },
-    ];
+    // const sampleShift = [
+    //     { type: 'Shift', area: 12 },
+    //     { type: 'Absent', area: 4 },
+    //     { type: 'Replacement Needed', area: 7 },
+    //     { type: 'Unavailable', area: 5 },
+    // ];
+
+
+    console.log("replacements", replacementTimeSlots)
+    console.log("timeslots", timeSlots)
+
+    useEffect(() => {
+        setPieChartData([
+            { type: 'Filled Shifts', area: timeSlots.length },
+            { type: 'Replacement Needed', area: replacementTimeSlots.length },
+        ])
+    }, [timeSlots, replacementTimeSlots])
 
     return (
-        <div className='Splash'>
-            <br />
-            {/* <h1>Shift Overview</h1> */}
-            <br />
-            <Grid container spacing={0} justifyContent="center">
-                <Grid item xl={7} lg={8} md={8} sm={8}>
-                    <PieChart2 data={sampleShift} />
+        <div className='Splash' >
+            {pieChartData.length === 0 ? <>Loading</> : <>
+                <Grid container justifyContent="space-between" direction="row" alignItems="baseline" sx={{ marginTop: '20px', marginBottom: '20px' }}>
+                    <Button size="small" variant='contained' sx={{ marginLeft: '40px' }} onClick={() => navigate('/member')}>Return to Profile</Button>
+                    <Typography variant='h4' fontWeight='bold'>Shift Overview</Typography>
+                    <Box sx={{ width: 200 }}></Box>
                 </Grid>
-            </Grid>
-            {/* for some reason the piechart disrupts the animation of the next graph, I put an empty invisible one here to resolve the issue */}
-            <BarChart2 width={0} />
-            <br /> <br />
-            <Grid container spacing={6} justifyContent="center">
-                <Grid item xl={5} lg={5} md={7} sm={9}>
-                    <BarChart2 data={goodBoyData} name="Shifts picked up" color="green" width={600} />
-                </Grid>
-                <Grid item xl={5} lg={5} md={7} sm={9}>
-                    <BarChart2 data={slackerData} name="Shifts dropped" color="darkred" width={600} />
-                </Grid>
-            </Grid>
-            <br />
-            <button onClick={() => navigate('/')}>Continue to Profile</button>
-            <br /> <br /> <br />
+
+                <Card sx={{ marginLeft: '40px', marginRight: '40px' }}>
+                    <Grid container justifyContent="center" sx={{ marginLeft: '200px', marginTop: '20px' }}>
+                        <Grid item xl={7} lg={8} md={8} sm={8}>
+                            <PieChart2 data={pieChartData} />
+                        </Grid>
+                    </Grid>
+
+                    <BarChart2 width={0} /> {/* for some reason the piechart disrupts the animation of the next graph, I put an empty invisible one here to resolve the issue */}
+
+                    <Grid container direction="row" justifyContent="space-evenly">
+                        <Grid item xl={5} lg={5} md={7} sm={9}>
+                            <BarChart2 data={goodBoyData} name="Shifts picked up" color="green" width={525} />
+                        </Grid>
+                        <Grid item xl={5} lg={5} md={7} sm={9}>
+                            <BarChart2 data={slackerData} name="Shifts dropped" color="darkred" width={525} />
+                        </Grid>
+                    </Grid>
+                    <br /> <br />
+                </Card>
+                <br /> <br />
+            </>}
         </div>
     )
 }
