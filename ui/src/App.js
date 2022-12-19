@@ -10,6 +10,7 @@ import Calendar from './pages/Calendar';
 import Member from './pages/Member';
 import LeaderProfile from './pages/LeaderProfile';
 import './App.css'
+import { Pending } from './pages/Pending';
 
 function App() {
   let [user, setUser] = useState(null);
@@ -30,6 +31,7 @@ function App() {
             <Route path="/leader" element={<LeaderProfile />} />
             <Route path="/splash" element={<Splash2 />} />
             <Route path="/calendar" element={<Calendar />} />
+            <Route path="/pending" element={<Pending />} />
             {/* <Route path="/crewProfile" element={<CrewProfile />} />
             <Route path="/leaderProfile" element={<LeaderProfile />} /> */}
           </Routes>
