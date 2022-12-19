@@ -38,10 +38,17 @@ const ApprovalRequest = ({ leader, setMembers }) => {
     const upgradeLeader = async () => {
       let leaderBody = leader;
       leaderBody.role = "leader";
-      let res = await axios.patch(ApiUrl + `/users/${leader.id}`, leaderBody, {withCredentials:true});
+      try{
+        let res = await axios.patch(ApiUrl + `/users/${leader.id}`, leaderBody, {withCredentials:true});
       let newMemberList = await axios.get(ApiUrl + '/users?member', {withCredentials:true});
       setMembers(newMemberList.data);
 
+
+      } catch (e){
+        console.log('Error with upgrading leader in ApprovalRequest.js', e);
+
+      }
+      
       
 
     }
@@ -52,14 +59,22 @@ const ApprovalRequest = ({ leader, setMembers }) => {
   }
 
   const handleDeny = () => {
-    console.log('Request Denied');
+    
 
     const downgradeLeader = async () => {
       let memberBody = leader;
       memberBody.role = "member";
-      let res = await axios.patch(ApiUrl + `/users/${leader.id}`, memberBody, {withCredentials:true});
+      try{
+        let res = await axios.patch(ApiUrl + `/users/${leader.id}`, memberBody, {withCredentials:true});
       let newMemberList = await axios.get(ApiUrl + '/users?member', {withCredentials:true});
       setMembers(newMemberList.data);
+
+      } catch (e){
+        console.log('Error with downgrading leader in ApprovalRequest.js', e);
+        
+
+      }
+      
     }
     downgradeLeader();
 

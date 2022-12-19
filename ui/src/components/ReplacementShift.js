@@ -23,14 +23,14 @@ const ReplacementShift = ({ replacementRequest, crewPositions, membersRequesting
         <Typography>
           Shift Date: {dateInfo(replacementRequest.start_datetime)}
         </Typography>
-        <Typography>
+        
           {crewPositions[0] === undefined ?
           <Typography>Shift Crew Position:</Typography>
           :
           <Typography> Shift Crew Position: {crewPositions[replacementRequest.crew_position_id -1].name} </Typography>
           }
           
-        </Typography>
+        
         <Typography>
           Member needing replacement: {returnMemberDetail(replacementRequest.user_id, memberList)}
         </Typography>

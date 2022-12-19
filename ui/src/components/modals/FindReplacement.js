@@ -77,7 +77,7 @@ const FindReplacement = ({ showFindReplacement, shiftSelected, shift, members })
           {eligibleMembers.map((member) => {
             return (
             <Grid item xs={12}>
-              <EligibleMemberCard member={member} replacementShift={shift}  />
+              <EligibleMemberCard key={member} member={member} replacementShift={shift}  />
             </Grid>
             );
         })}

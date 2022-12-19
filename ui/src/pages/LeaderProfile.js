@@ -95,11 +95,11 @@ const LeaderProfile = () => {
 
     useEffect(()=>{
       generateOverview(memberList, setOverivewData);
-      console.log('Member List:', memberList);
+      
       leaderPending(memberList, setLeadersPending);
-      console.log('Leaders pending', leadersPending);
+      
       //shiftspendings
-      console.log('All Shifts', allShifts);
+      
       filterPending(allShifts, setApprovalsPending);
 
 
@@ -107,8 +107,7 @@ const LeaderProfile = () => {
     }, [memberList])
 
     useEffect(() => {
-      console.log('Shift Triggered');
-      console.log('Shift selected: ', shiftSelected);
+      
       if(shiftSelected !== -1){
         setShowFindReplacement(true);
 
@@ -120,7 +119,23 @@ const LeaderProfile = () => {
       
 
 
-    }, [shiftSelected])
+    }, [shiftSelected]);
+
+    //Use effect that is called any time there is an update to the shift list from the server
+    useEffect(() => {
+      
+
+      let replacementList = allShifts.filter(shift => shift.type === 'replacement_needed');
+      setShiftsNeedingReplacements(replacementList);
+      filterPending(allShifts, setApprovalsPending);
+      leaderPending(memberList, setLeadersPending);
+
+
+
+
+
+
+    }, [allShifts]);
 
 
     useEffect(() => {
@@ -140,7 +155,7 @@ const LeaderProfile = () => {
         
       }
       getMembersNeedingReplacements();
-      memberCurrentlyAvailable(memberList[1]);
+      //memberCurrentlyAvailable(memberList[1]);
 
 
 
@@ -180,12 +195,13 @@ const LeaderProfile = () => {
             <Grid item xs={6} >
               <Card>
                 <p>Leadership input required</p>
+                {/* left side of the display */}
               </Card>
               <Grid container spacing={2} mt={2}>
                 {leadersPending.map((leader) => {
                   return(
                     <Grid item xs={6}>
-                      <ApprovalRequest leader={leader} setPending={setMemberList}/>
+                      <ApprovalRequest key={leader} leader={leader} setMembers={setMemberList}/>
                     </Grid>
 
                   );
@@ -197,7 +213,7 @@ const LeaderProfile = () => {
                 {approvalsPending.map((shift) => {
                   return(
                     <Grid item xs={6}>
-                      <ApprovalRequestShift shift={shift} setPending={setApprovalsPending} members={memberList}/>
+                      <ApprovalRequestShift key={shift} shift={shift} setPending={setApprovalsPending} members={memberList} roles={crewPositions} setShifts={setAllShifts}/>
                     </Grid>
 
                   );
@@ -207,7 +223,7 @@ const LeaderProfile = () => {
               </Grid>
 
               
-
+                {/* Right side of the display */}
               <Grid item xs={6}>
               <Card>
                 <p>Shifts waiting to be filled</p>
@@ -217,7 +233,7 @@ const LeaderProfile = () => {
                 {shiftsNeedingReplacements.map(shift => {
                   return(
                     <Grid item xs={6} >
-                      <ReplacementShift replacementRequest={shift} crewPositions={crewPositions} membersRequesting={membersRequesting} memberList={memberList} setShift={setShiftSelected} />
+                      <ReplacementShift key={shift} replacementRequest={shift} crewPositions={crewPositions} membersRequesting={membersRequesting} memberList={memberList} setShift={setShiftSelected} />
                     </Grid>
                   )
                   
