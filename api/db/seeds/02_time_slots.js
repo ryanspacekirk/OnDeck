@@ -3,7 +3,7 @@
  * @returns { Promise<void> } 
  */
 
-const types = ['shift', 'replacement_needed', 'absent', 'unavailable'];
+const types = ['shift', 'replacement_needed', 'pending_replacement'];
 
 const shifts = [{start: '2022-12-23 00:00:00', end: '2022-12-23 08:00:00'}, {start: '2022-12-23 08:00:00', end: '2022-12-23 16:00:00'}, 
 {start: '2022-12-23 16:00:00', end: '2022-12-24 00:00:00'},{start: '2022-12-24 00:00:00', end: '2022-12-24 08:00:00'},
@@ -79,19 +79,19 @@ exports.seed = async function(knex) {
     await createTime_Slot(0, 3, 0),
 
     //Bravo crew Saturnday Morning
-    await createTime_Slot(1, 4, 1),
+    await createTime_Slot(1, 4, 2),
     await createTime_Slot(1, 4, 0),
     await createTime_Slot(1, 4, 0),
 
     //Charlie crew Saturday Afternoon
     await createTime_Slot(2, 5, 0),
-    await createTime_Slot(2, 5, 1),
+    await createTime_Slot(2, 5, 2),
     await createTime_Slot(2, 5, 0),
 
      //Alpha crew Saturday Night
      await createTime_Slot(0, 6, 0),
      await createTime_Slot(0, 6, 0),
-     await createTime_Slot(0, 6, 1),
+     await createTime_Slot(0, 6, 2),
 
      //Bravo crew Sunday Morning
     await createTime_Slot(1, 7, 0),
