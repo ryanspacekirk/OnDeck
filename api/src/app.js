@@ -124,6 +124,10 @@ app.get("/users", validSession, async (req, res) => {
       let crew_positions = await knex('users').where('role', 'member');
       crew_positions = crew_positions.map(({ passwordHash, ...rest }) => rest);
       res.status(200).send(crew_positions);
+    } else if (role === 'pending') {
+      let crew_positions = await knex('users').where('role', 'pending');
+      crew_positions = crew_positions.map(({ passwordHash, ...rest }) => rest);
+      res.status(200).send(crew_positions);
     } else {
       let crew_positions = await knex('users');
       crew_positions = crew_positions.map(({ passwordHash, ...rest }) => rest);
@@ -134,6 +138,21 @@ app.get("/users", validSession, async (req, res) => {
       res.status(500).json(err.message);
   }
 })
+
+// PATCH users: update pending accounts to leader/member based on approve/deny
+
+app.patch("/users/:id", validSession, async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    let { body } = req;
+    await knex('users').where('id', id).update(body);
+    res.status(201).json("USER IS UPDATED");
+  } catch(err) {
+      console.log(err);
+      res.status(500).json(err.message);
+  }
+})
+
 
 // --------------------- CREW POSITION ENDPOINTS ----------------------------
 
@@ -188,6 +207,9 @@ app.get("/time_slots", validSession, async (req, res) => {
                                  .select('*', 'crew_positions.name', 'time_slots.description', 'time_slots.id')
                                  .where('type', 'replacement_needed');
       res.status(200).send(time_slots);
+    } else if (need_replacement === 'pending_replacement') {
+      const time_slots = await knex('time_slots').where('type', 'pending_replacement');
+      res.status(200).send(time_slots);
     }
     else if(user.role === "leader") {
       const time_slots = await knex('time_slots');
@@ -226,10 +248,7 @@ app.post("/time_slots", validSession, async (req, res) => {
     }
 })
 
-/* PATCH time_slots: if role is leader, updates the given time_slot with the 
-   information in the body of the request. If role is member, only updates the
-   time_slot if the session user_id matches the user_id of the time slot
-   AND they are not trying to update the type or start/end time */
+/* PATCH time_slots: */
 app.patch("/time_slots/:id", validSession, async (req, res) => {
     try {
       const id = parseInt(req.params.id);

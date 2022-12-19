@@ -9,7 +9,7 @@ exports.up = function(knex) {
     table.string('last_name', 50).notNullable();
     table.string('email', 50).notNullable();
     table.string('phone_number').notNullable();
-    table.enu('role', ['member', 'leader'], { useNative: true, enumName: 'role' }).notNullable();
+    table.enu('role', ['member', 'leader', 'pending'], { useNative: true, enumName: 'role' }).notNullable();
     table.string('rank', 10).notNullable();
     table.string('username', 20).unique().notNullable();
     table.string('passwordHash', 250).notNullable(); 

@@ -7,7 +7,7 @@ exports.up = function(knex) {
       table.increments('id').primary();
       table.datetime('start_datetime').notNullable();  
       table.datetime('end_datetime').notNullable();
-      table.enu('type', ['shift', 'replacement_needed', 'absent', 'unavailable'], { useNative: true, enumName: 'type' }).notNullable();
+      table.enu('type', ['shift', 'replacement_needed', 'pending_replacement'], { useNative: true, enumName: 'type' }).notNullable();
       table.string('description', 500).notNullable();
       table.integer('user_id').notNullable();
       table.foreign('user_id').references('users.id').onDelete('SET NULL');
