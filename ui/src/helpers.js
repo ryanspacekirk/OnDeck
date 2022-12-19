@@ -71,11 +71,11 @@ export const generateOverview = (members, overviewSetter) => {
 
 export const memberCurrentlyAvailable = async(member) => {
   //get all the time slots associated with that user
-  console.log('Member ID @ member currently available:', member.id)
+  
 
   try{
     let res = await axios.get(ApiUrl + `/time_slotsbyid?user_id=${member.id}`, {withCredentials:true});
-    console.log('Member specific timeslots', res.data);
+    
     
               
 
@@ -96,7 +96,7 @@ export const leaderPending = async (memberList, setLeadersPending) =>{
   let leadersNeedingApproval = [];
 
   leadersNeedingApproval = memberList.filter((member) => member.role === 'pending' );
-  console.log('People needing approval:', leadersNeedingApproval);
+  
   setLeadersPending(leadersNeedingApproval);
 
 }

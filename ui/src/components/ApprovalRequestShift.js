@@ -5,6 +5,7 @@ import { dateInfo, returnMemberDetail, matchMember } from "../helpers";
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import Blank from "./Blank";
 
 import config from '../config';
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
@@ -24,7 +25,7 @@ const ExpandMore = styled((props) => {
 }));
 
 
-const ApprovalRequestShift = ({ shift, setPending, members }) => {
+const ApprovalRequestShift = ({ shift, setPending, members, roles, setShifts }) => {
 
 
   let [expanded, setExpanded] = useState(false);
@@ -32,6 +33,7 @@ const ApprovalRequestShift = ({ shift, setPending, members }) => {
 
   useEffect(() => {
     matchMember(members, shift, setSpecificMember);
+    
 
   }, []);
 
@@ -40,22 +42,57 @@ const ApprovalRequestShift = ({ shift, setPending, members }) => {
   }
 
   const handleApprove = () => {
-    console.log('Submit clicked on: ', specificMember.first_name);
+
+    const approveRequest = async () => {
+      let slotBody = shift;
+      slotBody.type = "replacement_needed";
+      try{
+        let res = await axios.patch(ApiUrl + `/time_slots/${shift.id}`, slotBody, {withCredentials:true});
+      let updatedShifts = await axios.get(ApiUrl + '/time_slots', {withCredentials:true});
+      setShifts(updatedShifts.data);
+
+      } catch(e){
+        console.log('Error with approving request  in ApprovalRequestShift.js', e);
+      }
+      
+
+    }
+    approveRequest();
+
     //approve there shift by making a simple
   }
 
   const handleDeny = () => {
-    console.log('Deny clicked for clicked on: ', specificMember.first_name);
+    
+
+    const denyRequest = async () => {
+      let slotBody = shift;
+      slotBody.type = "shift";
+      try{
+        let res = await axios.patch(ApiUrl + `/time_slots/${shift.id}`, slotBody, {withCredentials:true});
+      let updatedShifts = await axios.get(ApiUrl + '/time_slots', {withCredentials:true});
+      setShifts(updatedShifts.data);
+
+      } catch(e){
+        console.log('Error with denying request  in ApprovalRequestShift.js', e);
+
+      }
+      
+
+    }
+    denyRequest();
 
   }
 
 
-
-
+if(members[shift.user_id -1] === undefined){
+  return (<Blank/>)
+}
+else{
   return(
     <Card>
       <CardActions disableSpacing>
-        {specificMember.first_name} {specificMember.last_name}
+        {members[shift.user_id -1].first_name} {members[shift.user_id -1].last_name}
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}
@@ -76,9 +113,18 @@ const ApprovalRequestShift = ({ shift, setPending, members }) => {
             Rank: {specificMember.rank}
           </Typography>
 
+          {roles[0] === undefined ?
           <Typography mt={1}>
-            Crew Position: {specificMember.email}
+          Crew Position
+        </Typography>
+        :
+        <Typography mt={1}>
+            Crew Position: {roles[shift.crew_position_id -1].name}
+            
           </Typography>
+          }
+
+          
 
           <Typography mt={1} mb={1}>
             Date Submitted: {dateInfo(shift.updated_at)}
@@ -98,6 +144,10 @@ const ApprovalRequestShift = ({ shift, setPending, members }) => {
     </Card>
 
   )
+
+}
+
+  
 
 }
 
