@@ -1,5 +1,5 @@
-import { Box, Typography, Button, FormHelperText, Modal, TextField,  FormControl} from "@mui/material";
-import { useState } from "react"
+import { Box, Typography, Button, FormHelperText, Modal, TextField,  FormControl, Select, MenuItem} from "@mui/material";
+import { useEffect, useState } from "react"
 import RankSelect from "../RankSelect";
 import PositonSelector from "../PositionSelector";
 import config from '../../config'
@@ -41,7 +41,7 @@ const CreateAccount = ({ showCreate }) => {
     rank:"E1",
     username:"",
     password:"",
-    role:"member",
+    role: "member",
     crew_position_id: 1,
   });
 
@@ -156,7 +156,19 @@ const CreateAccount = ({ showCreate }) => {
             <FormControl >
               <PositonSelector handleChange={handleChange} account={account} sx={{width: '100%'}}/>
             </FormControl>
-            <FormControl sx={{width: '60%'}}>
+            <FormControl>
+              <Select
+                value={account.role}
+                label="Role"
+                id="role-select"
+                onChange={handleChange}
+                name='role'
+              >
+                <MenuItem value={'member'}>Member</MenuItem>
+                <MenuItem value={'pending'}>Leader</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl sx={{width: '40%'}}>
               <RankSelect handleChange={handleChange} account={account}/>
             </FormControl>
           </Box>
