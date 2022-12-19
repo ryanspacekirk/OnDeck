@@ -1,3 +1,7 @@
+import axios from "axios";
+import config from './config';
+const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
+
 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 export const dateInfo = (isoDate) => {
@@ -65,6 +69,25 @@ export const generateOverview = (members, overviewSetter) => {
 
 }
 
-export const memberCurrentlyAvailable = (member) => {
+export const memberCurrentlyAvailable = async(member) => {
+  //get all the time slots associated with that user
+  console.log('Member ID @ member currently available:', member.id)
+
+  try{
+    let res = await axios.get(ApiUrl + `/time_slotsbyid?user_id=${member.id}`, {withCredentials:true});
+    console.log('Member specific timeslots', res.data);
+    
+              
+
+
+    } catch (e) {
+      console.log('Error finding crew positions for a specific id LeaderProfile:', e);
+
+    }
+
+
+
+
+
 
 }

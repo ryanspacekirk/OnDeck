@@ -21,7 +21,6 @@ const style = {
   overflow: 'scroll',
   flexDirection: 'column',
   justifyContent: 'space-evenly',
-   
 };
 
 
