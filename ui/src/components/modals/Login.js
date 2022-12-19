@@ -85,10 +85,13 @@ const Login = ({ showLogin }) => {
 
         setUser(resJson.user);
         //need logic to handle if user is a member or a leader
-        resJson.user.role === 'leader' ? navigate('/leader') : navigate('/member');
-        
-
-        // navigate('/member');
+        if (resJson.user.role === 'leader') {
+          navigate('/leader');
+        } else if (resJson.user.role === 'member') {
+          navigate('/member');
+        } else {
+          navigate('/pending');
+        }
       } catch(err) {
         console.log(err);
       }
