@@ -130,6 +130,9 @@ const LeaderProfile = () => {
       filterPending(allShifts, setApprovalsPending);
       leaderPending(memberList, setLeadersPending);
 
+      //all shifts have been updated. Need to see how many of a certain crew type are available
+
+
 
 
 
@@ -193,10 +196,8 @@ const LeaderProfile = () => {
           </Box>
           <Grid container spacing={6} mt={2}>
             <Grid item xs={6} >
-              <Card>
-                <p>Leadership input required</p>
-                {/* left side of the display */}
-              </Card>
+              <Typography variant='h4'> Leadership Input Required</Typography>
+              
               <Grid container spacing={2} mt={2}>
                 {leadersPending.map((leader) => {
                   return(
@@ -225,9 +226,8 @@ const LeaderProfile = () => {
               
                 {/* Right side of the display */}
               <Grid item xs={6}>
-              <Card>
-                <p>Shifts waiting to be filled</p>
-              </Card>
+                <Typography variant='h4'>Shifts Waiting to be Filled</Typography>
+              
 
               <Grid container spacing={2} mt={2}>
                 {shiftsNeedingReplacements.map(shift => {
@@ -249,7 +249,7 @@ const LeaderProfile = () => {
 
             
           </Box>
-          {showFindReplacement ? <FindReplacement showFindReplacement={setShowFindReplacement} shiftSelected={setShiftSelected} shift={shiftSelected}   members={memberList}/> : <Blank />}
+          {showFindReplacement ? <FindReplacement showFindReplacement={setShowFindReplacement} shiftSelected={setShiftSelected} shift={shiftSelected}   members={memberList} shifts={allShifts}/> : <Blank />}
             
 
         </Container>

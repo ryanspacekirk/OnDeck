@@ -4,7 +4,7 @@ import RankSelect from "../RankSelect";
 import PositonSelector from "../PositionSelector";
 import EligibleMemberCard from "../EligibleMemberCard";
 import config from '../../config'
-import { dateInfo, timeInfo, returnMemberDetail } from "../../helpers";
+import { dateInfo, timeInfo, returnMemberDetail, findPossibleReplacements } from "../../helpers";
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
 
 const style = {
@@ -25,7 +25,7 @@ const style = {
 
 
 
-const FindReplacement = ({ showFindReplacement, shiftSelected, shift, members }) => {
+const FindReplacement = ({ showFindReplacement, shiftSelected, shift, members, shifts }) => {
   let [findReplacementOpen, setFindReplacementOpen] = useState(true);
   let [eligibleMembers, setEligibleMembers] = useState([]);
 
@@ -40,8 +40,9 @@ const FindReplacement = ({ showFindReplacement, shiftSelected, shift, members })
     
   }
 
-  useEffect(() =>{
-    setEligibleMembers(members);
+  useEffect(() => {
+    findPossibleReplacements(shift, members, setEligibleMembers, shifts);
+    //setEligibleMembers(members);
   }, []);
 
 
@@ -58,7 +59,7 @@ const FindReplacement = ({ showFindReplacement, shiftSelected, shift, members })
     >
       <Box sx={style} >
       
-      <Typography sx={{textAlign: 'center', marginBottom: '20px', marginTop:'800px'}} variant="h4" fontWeight='bold'>
+      <Typography sx={{textAlign: 'center', marginBottom: '20px', marginTop:'200px'}} variant="h4" fontWeight='bold'>
           Possible Replacement
         </Typography>
         <Box sx={{display: 'flex', flexDirection: "row", justifyContent: 'space-between', marginBottom: '10px'}}>
@@ -77,7 +78,7 @@ const FindReplacement = ({ showFindReplacement, shiftSelected, shift, members })
           {eligibleMembers.map((member) => {
             return (
             <Grid item xs={12}>
-              <EligibleMemberCard key={member} member={member} replacementShift={shift}  />
+              <EligibleMemberCard key={member} member={member} replacementShift={shift} allShifts={shifts}  />
             </Grid>
             );
         })}

@@ -110,7 +110,7 @@ else{
           </Typography>
 
           <Typography mt={1}>
-            Rank: {specificMember.rank}
+            Rank: {members[shift.user_id -1].rank}
           </Typography>
 
           {roles[0] === undefined ?

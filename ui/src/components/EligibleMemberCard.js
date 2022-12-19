@@ -1,9 +1,9 @@
 import { Button, Card, CardActionArea, CardActions, CardContent, CardHeader, Collapse, Typography } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
-import { memberString, dateInfo, timeInfo } from "../helpers";
+import { memberString, dateInfo, timeInfo, shiftHelper } from "../helpers";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 const ExpandMore = styled((props) => {
@@ -17,7 +17,7 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-const EligibleMemberCard = ({ member, replacementShift }) => {
+const EligibleMemberCard = ({ member, replacementShift, allShifts }) => {
   let [expanded, setExpanded] = useState(false);
 
   const handleExpandClick = () => {
@@ -29,6 +29,9 @@ const EligibleMemberCard = ({ member, replacementShift }) => {
     console.log('Assigned: ', memberString(member), ' to ', replacementShift);
     
   }
+  useEffect(() => {
+    shiftHelper(member, allShifts)
+  })
 
   return(
     <div className="EligibleMemberCard">
@@ -52,8 +55,16 @@ const EligibleMemberCard = ({ member, replacementShift }) => {
 
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
+          <Typography mt={1}>
+              Phone Number: {member.phone_number}
+            </Typography>
             <Typography mt={1}>
-              Last Shift:
+              Last Shift: {dateInfo(shiftHelper(member, allShifts).last)}
+              {/* Last Shift: {shiftHelper(member, allShifts).last} */}
+            </Typography>
+
+            <Typography mt={1}>
+            Last Shift: {dateInfo(shiftHelper(member, allShifts).next)}
             </Typography>
 
             <Typography mt={1}>
