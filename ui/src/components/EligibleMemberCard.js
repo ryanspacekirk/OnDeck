@@ -52,8 +52,19 @@ const EligibleMemberCard = ({ member, replacementShift }) => {
 
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            Test content
-            <Button onClick={handleReassign}>Assign</Button>
+            <Typography mt={1}>
+              Last Shift:
+            </Typography>
+
+            <Typography mt={1}>
+              Number of shifts dropped:
+            </Typography>
+
+            <Typography mt={1} mb={1}>
+              Number of shifts picked up:
+            </Typography>
+            
+            <Button onClick={handleReassign} variant="contained" >Assign to Shift</Button>
           </CardContent>
 
 

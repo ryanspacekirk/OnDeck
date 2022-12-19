@@ -4,10 +4,11 @@ import { MenuItem, Select, Box, Grid, Item, Card } from "@mui/material";
 import { Context } from '../App';
 import axios from "axios";
 import '../App.css';
-import { doubleFilter, generateOverview } from '../helpers';
+import { doubleFilter, generateOverview, memberCurrentlyAvailable } from '../helpers';
 import ReplacementShift from '../components/ReplacementShift';
 import FindReplacement from '../components/modals/FindReplacement';
 import Blank from '../components/Blank';
+import ApprovalRequest from '../components/ApprovalRequest';
 import config from '../config';
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
 
@@ -77,6 +78,8 @@ const LeaderProfile = () => {
           }
         }
         getMembers();
+
+        //Need to pull all the items awaiting for approval
         
 
 
@@ -124,6 +127,8 @@ const LeaderProfile = () => {
         
       }
       getMembersNeedingReplacements();
+      memberCurrentlyAvailable(memberList[1]);
+
 
 
 
@@ -146,9 +151,43 @@ const LeaderProfile = () => {
               <Grid item xs={4}>
                 <Card> Total # of GSOs {overviewData.numGSO}</Card>
               </Grid>
+
+              <Grid item xs={4}>
+                <Card> Total # of commanders currently avaialable {overviewData.numCommander}</Card>
+              </Grid>
+              <Grid item xs={4}>
+                <Card> Total # of SVOs currently avaialable {overviewData.numSVO}</Card>
+              </Grid>
+              <Grid item xs={4}>
+                <Card> Total # of GSOs currently avaialable {overviewData.numGSO}</Card>
+              </Grid>
             </Grid>
           </Box>
-            <Grid container spacing={2} mt={2}>
+          <Grid container spacing={6} mt={2}>
+            <Grid item xs={6} >
+              <Card>
+                <p>Leadership input required</p>
+              </Card>
+              <Grid container spacing={2} mt={2}>
+                <Grid item xs={6}>
+                  <ApprovalRequest />
+                </Grid>
+                <Grid item xs={6}>
+                <ApprovalRequest />
+                </Grid>
+                {/* Items needing approval... need to map through all the items */}
+                
+              </Grid>
+              </Grid>
+
+              
+
+              <Grid item xs={6}>
+              <Card>
+                <p>Shifts waiting to be filled</p>
+              </Card>
+
+              <Grid container spacing={2} mt={2}>
                 {shiftsNeedingReplacements.map(shift => {
                   return(
                     <Grid item xs={6} >
@@ -160,6 +199,11 @@ const LeaderProfile = () => {
                 
               
             </Grid>
+            </Grid>
+
+
+          </Grid>
+            
 
             
           </Box>

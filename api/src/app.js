@@ -205,6 +205,35 @@ app.get("/time_slots", validSession, async (req, res) => {
   }
 })
 
+/* GET time_slots: if role is leader, returns all timeslots for the specified user.  */
+
+app.get("/time_slotsbyid", validSession, async (req, res) => {
+  console.log('Parameters:', req.query);
+  let user_id = parseInt(req.query.user_id);
+  //const user_id = parseInt(req.params.user_id);
+  //const { user_id } = req.query;
+  const user = req.session.user;
+  console.log('User ID: ', user_id)
+  try {
+
+
+    
+    if(user.role === "leader") {
+      const time_slots = await knex('time_slots').where('user_id', user_id);
+      res.status(200).send(time_slots);
+    }
+    
+  } catch(err) {
+      console.log(err);
+      res.status(500).json(err.message);
+  }
+})
+
+
+
+
+
+
 /* POST time_slots: if role is leader, creates a time_slot with the information
    in the body of the request. If role is member, creates a time_slot only if
    the type is not shift */
