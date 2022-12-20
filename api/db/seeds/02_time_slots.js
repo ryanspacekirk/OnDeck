@@ -9,7 +9,21 @@ const shifts = [{start: '2022-12-23 00:00:00', end: '2022-12-23 08:00:00'}, {sta
 {start: '2022-12-23 16:00:00', end: '2022-12-24 00:00:00'},{start: '2022-12-24 00:00:00', end: '2022-12-24 08:00:00'},
 {start: '2022-12-24 08:00:00', end: '2022-12-24 16:00:00'},{start: '2022-12-24 16:00:00', end: '2022-12-25 00:00:00'},
 {start: '2022-12-25 00:00:00', end: '2022-12-25 08:00:00'},{start: '2022-12-25 08:00:00', end: '2022-12-25 16:00:00'},
-{start: '2022-12-25 16:00:00', end: '2022-12-26 00:00:00'},{start: '2022-12-26 00:00:00', end: '2022-12-26 08:00:00'}];
+{start: '2022-12-25 16:00:00', end: '2022-12-26 00:00:00'},{start: '2022-12-26 00:00:00', end: '2022-12-26 08:00:00'},
+
+{start: '2022-12-19 00:00:00', end: '2022-12-19 08:00:00'}, {start: '2022-12-19 08:00:00', end: '2022-12-19 16:00:00'},
+{start: '2022-12-19 16:00:00', end: '2022-12-20 00:00:00'}, {start: '2022-12-20 00:00:00', end: '2022-12-20 08:00:00'},
+{start: '2022-12-20 08:00:00', end: '2022-12-20 16:00:00'}, {start: '2022-12-20 16:00:00', end: '2022-12-21 00:00:00'},
+{start: '2022-12-21 00:00:00', end: '2022-12-21 08:00:00'}, {start: '2022-12-21 08:00:00', end: '2022-12-21 16:00:00'},
+{start: '2022-12-21 16:00:00', end: '2022-12-22 00:00:00'}, {start: '2022-12-22 00:00:00', end: '2022-12-22 08:00:00'},
+{start: '2022-12-22 08:00:00', end: '2022-12-22 16:00:00'}, {start: '2022-12-22 16:00:00', end: '2022-12-23 00:00:00'},
+
+{start: '2022-12-18 00:00:00', end: '2022-12-18 08:00:00'},
+{start: '2022-12-18 08:00:00', end: '2022-12-18 16:00:00'}, 
+{start: '2022-12-18 16:00:00', end: '2022-12-19 00:00:00'},
+
+
+];
 
 exports.seed = async function(knex) {
 
@@ -58,6 +72,98 @@ exports.seed = async function(knex) {
     //The first value relates to what shift, the second initalizes the type
     //CREW | SHIFT | TYPE
 
+
+
+         //Bravo crew Saturday Night
+         await createTime_Slot(1, 22, 0),
+         await createTime_Slot(1, 22, 0),
+         await createTime_Slot(1, 22, 0),
+     
+         //Charlie crew Sunday Morning
+         await createTime_Slot(2, 23, 0),
+         await createTime_Slot(2, 23, 0),
+         await createTime_Slot(2, 23, 0),
+     
+         //Alpha crew Sunday Afternoon
+         await createTime_Slot(0, 24, 0),
+         await createTime_Slot(0, 24, 0),
+         await createTime_Slot(0, 24, 0),
+
+
+
+
+     //Foxtrot crew Sunday Night
+  await createTime_Slot(5, 10, 0),
+  await createTime_Slot(5, 10, 0),
+  await createTime_Slot(5, 10, 0),
+
+  //Echo crew Monday Morning
+  await createTime_Slot(4, 11, 0),
+  await createTime_Slot(4, 11, 0),
+  await createTime_Slot(4, 11, 0),
+
+  //Delta crew Monday Afternoon
+  await createTime_Slot(3, 12, 0),
+  await createTime_Slot(3, 12, 0),
+  await createTime_Slot(3, 12, 0),
+
+
+     //Foxtrot crew Monday Night
+  await createTime_Slot(5, 13, 0),
+  await createTime_Slot(5, 13, 0),
+  await createTime_Slot(5, 13, 0),
+
+  //Echo crew Tuesday Morning
+  await createTime_Slot(4, 14, 0),
+  await createTime_Slot(4, 14, 0),
+  await createTime_Slot(4, 14, 0),
+
+  //Delta crew Tuesday Afternoon
+  await createTime_Slot(3, 15, 0),
+  await createTime_Slot(3, 15, 0),
+  await createTime_Slot(3, 15, 0),
+
+
+
+
+     //Foxtrot crew Tuesday Night
+  await createTime_Slot(5, 16, 0),
+  await createTime_Slot(5, 16, 0),
+  await createTime_Slot(5, 16, 0),
+
+  //Echo crew Wednesday Morning
+  await createTime_Slot(4, 17, 0),
+  await createTime_Slot(4, 17, 0),
+  await createTime_Slot(4, 17, 0),
+
+  //Delta crew Wednesday Afternoon
+  await createTime_Slot(3, 18, 0),
+  await createTime_Slot(3, 18, 0),
+  await createTime_Slot(3, 18, 0),
+
+
+
+  //Foxtrot crew Wednesday Night
+  await createTime_Slot(5, 19, 0),
+  await createTime_Slot(5, 19, 0),
+  await createTime_Slot(5, 19, 0),
+
+  //Echo crew Thursday Morning
+  await createTime_Slot(4, 20, 0),
+  await createTime_Slot(4, 20, 0),
+  await createTime_Slot(4, 20, 0),
+
+  //Delta crew Thursday Afternoon
+  await createTime_Slot(3, 21, 0),
+  await createTime_Slot(3, 21, 0),
+  await createTime_Slot(3, 21, 0),
+
+
+
+
+//////////////////////////////////////
+
+
     //Alpha crew Thursday Night
     await createTime_Slot(0, 0, 0),
     await createTime_Slot(0, 0, 0),
@@ -103,7 +209,7 @@ exports.seed = async function(knex) {
     await createTime_Slot(2, 8, 0),
     await createTime_Slot(2, 8, 0),
 
-    //Alpha crew Saturday Night
+    //Alpha crew Sunday Night
     await createTime_Slot(0, 9, 0),
     await createTime_Slot(0, 9, 0),
     await createTime_Slot(0, 9, 0),
