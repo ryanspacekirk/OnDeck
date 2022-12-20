@@ -12,7 +12,8 @@ export const TimeSlot = ({ slot, type, toggleRefresh }) => {
   const handlePickUp = () => {
     const pickUp = async () => {
       try {
-        const res = await fetch(ApiUrl + `/time_slots/${slot.id}`, {
+        console.log("hit");
+        const res = await fetch(ApiUrl + `/time_slots/${slot.id}?assignment_adjusted=true`, {
           method: "PATCH",
           credentials: "include",
           headers: {
