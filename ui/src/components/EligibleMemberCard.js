@@ -29,8 +29,7 @@ const EligibleMemberCard = ({ member, replacementShift, allShifts }) => {
   }
 
   const handleReassign = () => {
-    console.log('Reassignment activated');
-    console.log('Assigned: ', memberString(member), ' to ', replacementShift);
+    
 
     const pickUp = async () => {
       try {
@@ -50,6 +49,7 @@ const EligibleMemberCard = ({ member, replacementShift, allShifts }) => {
         }
 
         //toggle refresh
+        setSuccessSwap(true);
 
 
       } catch(err) {
