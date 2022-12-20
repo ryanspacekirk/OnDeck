@@ -293,7 +293,6 @@ app.patch("/time_slots/:id", validSession, async (req, res) => {
       const id = parseInt(req.params.id);
       let { body } = req;
       if (assignment_adjusted === 'true') {
-        console.log("hit")
         const original_time_slot = await knex('time_slots').where('id', id);
         const removed_member = original_time_slot[0].user_id;
         const added_member = body.user_id;
