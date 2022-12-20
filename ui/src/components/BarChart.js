@@ -3,7 +3,7 @@ import { Chart, Series, Size, Legend , ValueAxis} from 'devextreme-react/chart';
 // npm i devextreme
 // npm i devextreme-react 
 
-export default function BarChart2({ data, name, color, width }) {
+export default function BarChart({ data, name, color, width }) {
 
     return (
         <Chart id="chart" dataSource={data}>

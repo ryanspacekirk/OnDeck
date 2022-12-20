@@ -1,5 +1,6 @@
 import { Container, Typography } from '@mui/material';
-import  { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { MenuItem, Select, Box, Grid, Item, Card } from "@mui/material";
 import { Context } from '../App';
 import axios, { all } from "axios";
@@ -20,6 +21,7 @@ const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
 
 
 const LeaderProfile = () => {
+  const navigate = useNavigate();
   const { user } = useContext(Context);
   let [shiftsNeedingReplacements, setShiftsNeedingReplacements] = useState([]);
   let [crewPositions, setCrewPositions] = useState([]);
@@ -41,15 +43,22 @@ const LeaderProfile = () => {
   let [approvalsPending, setApprovalsPending] = useState([]);
   let [allShifts, setAllShifts] = useState([]);
 
+  //reroutes if user doesn't have access
   useEffect(() => {
-    const getShiftsNeedingReplacements = async () =>{
-      try{
-      let res = await axios.get(ApiUrl + '/time_slots', {withCredentials:true});
-      setAllShifts(res.data);
-      
-      let replacementList = res.data.filter(shift => shift.type === 'replacement_needed');
-      setShiftsNeedingReplacements(replacementList);
-                
+    if (user !== null) {
+      if (user.role !== 'leader') navigate('/accessDenied')
+    }
+  }, [user])
+
+  useEffect(() => {
+    const getShiftsNeedingReplacements = async () => {
+      try {
+        let res = await axios.get(ApiUrl + '/time_slots', { withCredentials: true });
+        setAllShifts(res.data);
+
+        let replacementList = res.data.filter(shift => shift.type === 'replacement_needed');
+        setShiftsNeedingReplacements(replacementList);
+
 
 
       } catch (e) {
@@ -59,203 +68,205 @@ const LeaderProfile = () => {
     }
 
     const getCrewPositions = async () => {
-        try{
-          let res = await axios.get(ApiUrl + '/crew_positions', {withCredentials:true});
-          setCrewPositions(res.data);
+      try {
+        let res = await axios.get(ApiUrl + '/crew_positions', { withCredentials: true });
+        setCrewPositions(res.data);
 
 
-        } catch (e) {
-          console.log('Error finding crew positions LeaderProfile:', e);
-    
-        }
-    
-        }
-          getCrewPositions();
-
-        getShiftsNeedingReplacements();
-
-        const getMembers = async () => {
-          try{
-            let res = await axios.get(ApiUrl + '/users?member', {withCredentials:true});
-            setMemberList(res.data);
-          } catch(e){
-            console.log('Error finding members  in LeaderProfile:', e);
-  
-          }
-        }
-        getMembers();
-
-        //Need to pull all the items awaiting for approval
-        
-
-
-
-        
-    }, []);
-
-    useEffect(()=>{
-      generateOverview(memberList, setOverivewData, allShifts);
-      
-      leaderPending(memberList, setLeadersPending);
-      
-      //shiftspendings
-      
-      filterPending(allShifts, setApprovalsPending);
-
-
-
-    }, [memberList])
-
-    useEffect(() => {
-      
-      if(shiftSelected !== -1){
-        setShowFindReplacement(true);
+      } catch (e) {
+        console.log('Error finding crew positions LeaderProfile:', e);
 
       }
-      else{
-        setShowFindReplacement(false);
+
+    }
+    getCrewPositions();
+
+    getShiftsNeedingReplacements();
+
+    const getMembers = async () => {
+      try {
+        let res = await axios.get(ApiUrl + '/users?member', { withCredentials: true });
+        setMemberList(res.data);
+      } catch (e) {
+        console.log('Error finding members  in LeaderProfile:', e);
+
       }
-      
-      
+    }
+    getMembers();
 
-
-    }, [shiftSelected]);
-
-    //Use effect that is called any time there is an update to the shift list from the server
-    useEffect(() => {
-      
-
-      let replacementList = allShifts.filter(shift => shift.type === 'replacement_needed');
-      setShiftsNeedingReplacements(replacementList);
-      filterPending(allShifts, setApprovalsPending);
-      leaderPending(memberList, setLeadersPending);
-
-      //all shifts have been updated. Need to see how many of a certain crew type are available
+    //Need to pull all the items awaiting for approval
 
 
 
 
 
+  }, []);
+
+  useEffect(() => {
+    generateOverview(memberList, setOverivewData, allShifts);
+
+    leaderPending(memberList, setLeadersPending);
+
+    //shiftspendings
+
+    filterPending(allShifts, setApprovalsPending);
 
 
-    }, [allShifts]);
+
+  }, [memberList])
+
+  useEffect(() => {
+
+    if (shiftSelected !== -1) {
+      setShowFindReplacement(true);
+
+    }
+    else {
+      setShowFindReplacement(false);
+    }
 
 
-    useEffect(() => {
 
-      const getMembersNeedingReplacements = async () => {
-        try{
-          let res = await axios.get(ApiUrl + '/users?member', {withCredentials:true});
-          setMemberList(res.data);
 
-          let memberList = await doubleFilter(res.data, shiftsNeedingReplacements);
-          setMembersRequesting(memberList);
+  }, [shiftSelected]);
 
-        } catch(e){
-          console.log('Error finding members needing replacements in LeaderProfile:', e);
+  //Use effect that is called any time there is an update to the shift list from the server
+  useEffect(() => {
 
-        }
-        
+
+    let replacementList = allShifts.filter(shift => shift.type === 'replacement_needed');
+    setShiftsNeedingReplacements(replacementList);
+    filterPending(allShifts, setApprovalsPending);
+    leaderPending(memberList, setLeadersPending);
+
+    //all shifts have been updated. Need to see how many of a certain crew type are available
+
+
+
+
+
+
+
+  }, [allShifts]);
+
+
+  useEffect(() => {
+
+    const getMembersNeedingReplacements = async () => {
+      try {
+        let res = await axios.get(ApiUrl + '/users?member', { withCredentials: true });
+        setMemberList(res.data);
+
+        let memberList = await doubleFilter(res.data, shiftsNeedingReplacements);
+        setMembersRequesting(memberList);
+
+      } catch (e) {
+        console.log('Error finding members needing replacements in LeaderProfile:', e);
+
       }
-      getMembersNeedingReplacements();
-      //memberCurrentlyAvailable(memberList[1]);
+
+    }
+    getMembersNeedingReplacements();
+    //memberCurrentlyAvailable(memberList[1]);
 
 
 
 
-    }, [shiftsNeedingReplacements]);
+  }, [shiftsNeedingReplacements]);
 
 
-    return (
-      <div className='LeaderProfile'>
-        <Container>
-          <Box>
-          <Typography>Shifts that need to be filled!</Typography>
-          <Box>
-            <Grid container spacing={2} >
-              <Grid item xs={4}>
-                <Card> Total # of commanders {overviewData.numCommander}</Card>
-              </Grid>
-              <Grid item xs={4}>
-                <Card> Total # of SVOs {overviewData.numSVO}</Card>
-              </Grid>
-              <Grid item xs={4}>
-                <Card> Total # of GSOs {overviewData.numGSO}</Card>
-              </Grid>
+  return (
+    <div className='LeaderProfile'>
+      {user === null ? <><Typography variant='h6' align='center' sx={{ marginTop: '20px' }}>Loading...</Typography></>
+        : <>
+          <Container>
+            <Box>
+              <Typography>Shifts that need to be filled!</Typography>
+              <Box>
+                <Grid container spacing={2} >
+                  <Grid item xs={4}>
+                    <Card> Total # of commanders {overviewData.numCommander}</Card>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Card> Total # of SVOs {overviewData.numSVO}</Card>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Card> Total # of GSOs {overviewData.numGSO}</Card>
+                  </Grid>
 
-              <Grid item xs={4}>
-                <Card> Total # of commanders currently avaialable {overviewData.numCommander}</Card>
-              </Grid>
-              <Grid item xs={4}>
-                <Card> Total # of SVOs currently avaialable {overviewData.numSVO}</Card>
-              </Grid>
-              <Grid item xs={4}>
-                <Card> Total # of GSOs currently avaialable {overviewData.numGSO}</Card>
-              </Grid>
-            </Grid>
-          </Box>
-          <Grid container spacing={6} mt={2}>
-            <Grid item xs={6} >
-              <Typography variant='h4'> Leadership Input Required</Typography>
-              
-              <Grid container spacing={2} mt={2}>
-                {leadersPending.map((leader) => {
-                  return(
-                    <Grid item xs={6}>
-                      <ApprovalRequest key={leader} leader={leader} setMembers={setMemberList}/>
-                    </Grid>
+                  <Grid item xs={4}>
+                    <Card> Total # of commanders currently avaialable {overviewData.numCommander}</Card>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Card> Total # of SVOs currently avaialable {overviewData.numSVO}</Card>
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Card> Total # of GSOs currently avaialable {overviewData.numGSO}</Card>
+                  </Grid>
+                </Grid>
+              </Box>
+              <Grid container spacing={6} mt={2}>
+                <Grid item xs={6} >
+                  <Typography variant='h4'> Leadership Input Required</Typography>
 
-                  );
-                })}
-                
-              </Grid>
+                  <Grid container spacing={2} mt={2}>
+                    {leadersPending.map((leader) => {
+                      return (
+                        <Grid item xs={6}>
+                          <ApprovalRequest key={leader} leader={leader} setMembers={setMemberList} />
+                        </Grid>
 
-              <Grid container spacing={2} mt={2}>
-                {approvalsPending.map((shift) => {
-                  return(
-                    <Grid item xs={6}>
-                      <ApprovalRequestShift key={shift} shift={shift} setPending={setApprovalsPending} members={memberList} roles={crewPositions} setShifts={setAllShifts}/>
-                    </Grid>
+                      );
+                    })}
 
-                  );
-                })}
-                
-              </Grid>
-              </Grid>
+                  </Grid>
 
-              
+                  <Grid container spacing={2} mt={2}>
+                    {approvalsPending.map((shift) => {
+                      return (
+                        <Grid item xs={6}>
+                          <ApprovalRequestShift key={shift} shift={shift} setPending={setApprovalsPending} members={memberList} roles={crewPositions} setShifts={setAllShifts} />
+                        </Grid>
+
+                      );
+                    })}
+
+                  </Grid>
+                </Grid>
+
+
                 {/* Right side of the display */}
-              <Grid item xs={6}>
-                <Typography variant='h4'>Shifts Waiting to be Filled</Typography>
-              
-
-              <Grid container spacing={2} mt={2}>
-                {shiftsNeedingReplacements.map(shift => {
-                  return(
-                    <Grid item xs={6} >
-                      <ReplacementShift key={shift} replacementRequest={shift} crewPositions={crewPositions} membersRequesting={membersRequesting} memberList={memberList} setShift={setShiftSelected} />
-                    </Grid>
-                  )
-                  
-                })} 
-                
-              
-            </Grid>
-            </Grid>
+                <Grid item xs={6}>
+                  <Typography variant='h4'>Shifts Waiting to be Filled</Typography>
 
 
-          </Grid>
-            
+                  <Grid container spacing={2} mt={2}>
+                    {shiftsNeedingReplacements.map(shift => {
+                      return (
+                        <Grid item xs={6} >
+                          <ReplacementShift key={shift} replacementRequest={shift} crewPositions={crewPositions} membersRequesting={membersRequesting} memberList={memberList} setShift={setShiftSelected} />
+                        </Grid>
+                      )
+
+                    })}
+
+
+                  </Grid>
+                </Grid>
+
+
+              </Grid>
+
 
             
           </Box>
           {showFindReplacement ? <FindReplacement key={shiftSelected.id} showFindReplacement={setShowFindReplacement} shiftSelected={setShiftSelected} shift={shiftSelected}   members={memberList} shifts={allShifts} setShifts={setAllShifts}/> : <Blank />}
             
 
-        </Container>
-
-        </div>
-    )
+          </Container>
+        </>}
+    </div>
+  )
 }
 
 export default LeaderProfile;
