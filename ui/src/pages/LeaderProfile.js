@@ -15,24 +15,13 @@ const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
 
 
 
-
-
-
-
 const LeaderProfile = () => {
   const { user } = useContext(Context);
   let [shiftsNeedingReplacements, setShiftsNeedingReplacements] = useState([]);
   let [crewPositions, setCrewPositions] = useState([]);
   let [memberList, setMemberList] = useState([]);
   let [membersRequesting, setMembersRequesting] = useState([]);
-  let [overviewData, setOverivewData] = useState({
-    numCommander: -1,
-    numSVO: -1,
-    numGSO: -1,
-    numCommanderAvail: -1,
-    numSVOAvail: -1,
-    numGSOAvail: -1
-  });
+  let [overviewData, setOverivewData] = useState({numCommander: -1, numSVO: -1, numGSO: -1, numCommanderAvail: -1, numSVOAvail: -1, numGSOAvail: -1});
 
   let [shiftSelected, setShiftSelected] = useState(-1);
   let [showFindReplacement, setShowFindReplacement] = useState(false);
@@ -50,8 +39,6 @@ const LeaderProfile = () => {
       let replacementList = res.data.filter(shift => shift.type === 'replacement_needed');
       setShiftsNeedingReplacements(replacementList);
                 
-
-
       } catch (e) {
         console.log('Error finding crew positions LeaderProfile:', e);
 
@@ -66,9 +53,7 @@ const LeaderProfile = () => {
 
         } catch (e) {
           console.log('Error finding crew positions LeaderProfile:', e);
-    
         }
-    
         }
           getCrewPositions();
 
@@ -86,10 +71,7 @@ const LeaderProfile = () => {
         getMembers();
 
         //Need to pull all the items awaiting for approval
-        
-
-
-
+        generateOverview(memberList, setOverivewData, allShifts);
         
     }, []);
 
@@ -114,10 +96,7 @@ const LeaderProfile = () => {
       }
       else{
         setShowFindReplacement(false);
-      }
-      
-      
-
+      }  
 
     }, [shiftSelected]);
 
@@ -133,16 +112,10 @@ const LeaderProfile = () => {
       //all shifts have been updated. Need to see how many of a certain crew type are available
 
 
-
-
-
-
-
     }, [allShifts]);
 
 
     useEffect(() => {
-
       const getMembersNeedingReplacements = async () => {
         try{
           let res = await axios.get(ApiUrl + '/users?member', {withCredentials:true});
@@ -153,15 +126,10 @@ const LeaderProfile = () => {
 
         } catch(e){
           console.log('Error finding members needing replacements in LeaderProfile:', e);
-
-        }
-        
+        }       
       }
       getMembersNeedingReplacements();
       //memberCurrentlyAvailable(memberList[1]);
-
-
-
 
     }, [shiftsNeedingReplacements]);
 
@@ -182,15 +150,14 @@ const LeaderProfile = () => {
               <Grid item xs={4}>
                 <Card> Total # of GSOs {overviewData.numGSO}</Card>
               </Grid>
-
               <Grid item xs={4}>
-                <Card> Total # of commanders currently avaialable {overviewData.numCommander}</Card>
+                <Card> Total # of commanders currently avaialable {overviewData.numCommanderAvail}</Card>
               </Grid>
               <Grid item xs={4}>
-                <Card> Total # of SVOs currently avaialable {overviewData.numSVO}</Card>
+                <Card> Total # of SVOs currently avaialable {overviewData.numSVOAvail}</Card>
               </Grid>
               <Grid item xs={4}>
-                <Card> Total # of GSOs currently avaialable {overviewData.numGSO}</Card>
+                <Card> Total # of GSOs currently avaialable {overviewData.numGSOAvail}</Card>
               </Grid>
             </Grid>
           </Box>
@@ -204,31 +171,25 @@ const LeaderProfile = () => {
                     <Grid item xs={6}>
                       <ApprovalRequest key={leader} leader={leader} setMembers={setMemberList}/>
                     </Grid>
-
                   );
                 })}
                 
               </Grid>
-
               <Grid container spacing={2} mt={2}>
                 {approvalsPending.map((shift) => {
                   return(
                     <Grid item xs={6}>
                       <ApprovalRequestShift key={shift} shift={shift} setPending={setApprovalsPending} members={memberList} roles={crewPositions} setShifts={setAllShifts}/>
                     </Grid>
-
                   );
                 })}
                 
               </Grid>
               </Grid>
 
-              
                 {/* Right side of the display */}
               <Grid item xs={6}>
                 <Typography variant='h4'>Shifts Waiting to be Filled</Typography>
-              
-
               <Grid container spacing={2} mt={2}>
                 {shiftsNeedingReplacements.map(shift => {
                   return(
@@ -236,18 +197,10 @@ const LeaderProfile = () => {
                       <ReplacementShift key={shift} replacementRequest={shift} crewPositions={crewPositions} membersRequesting={membersRequesting} memberList={memberList} setShift={setShiftSelected} />
                     </Grid>
                   )
-                  
                 })} 
-                
-              
             </Grid>
             </Grid>
-
-
-          </Grid>
-            
-
-            
+          </Grid>          
           </Box>
           {showFindReplacement ? <FindReplacement key={shiftSelected.id} showFindReplacement={setShowFindReplacement} shiftSelected={setShiftSelected} shift={shiftSelected}   members={memberList} shifts={allShifts} setShifts={setAllShifts}/> : <Blank />}
             

@@ -55,6 +55,11 @@ const FindReplacement = ({ showFindReplacement, shiftSelected, shift, members, s
     //setEligibleMembers(members);
   }, []);
 
+  useEffect(() => {
+    findPossibleReplacements(shift, members, setEligibleMembers, shifts);
+
+  },[shiftSelected])
+
 
   return(
     <Box sx={{overflowY: "scroll"}}>
