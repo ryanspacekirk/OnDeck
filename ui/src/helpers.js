@@ -72,8 +72,7 @@ export const generateOverview = (members, overviewSetter, allShifts) => {
   let tempDay = new Date();
   
   tempData.numCommanderAvail =  generateNumReplacements(tempDay, members, 1, allShifts);
-  
-  
+
   tempData.numSVOAvail =  generateNumReplacements(tempDay, members, 2, allShifts);
   tempData.numGSOAvail =  generateNumReplacements(tempDay, members, 3, allShifts);
 
