@@ -1,9 +1,12 @@
-import { Button, Card, CardActionArea, CardActions, CardContent, CardHeader, Collapse, Typography } from "@mui/material";
+import { Button, Card, CardActionArea, CardActions, CardContent, CardHeader, Collapse, Typography, Alert } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import { memberString, dateInfo, timeInfo, shiftHelper } from "../helpers";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { useEffect, useState } from "react";
+import config from "../config";
+import Blank from "./Blank";
+const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
 
 
 const ExpandMore = styled((props) => {
@@ -19,6 +22,7 @@ const ExpandMore = styled((props) => {
 
 const EligibleMemberCard = ({ member, replacementShift, allShifts }) => {
   let [expanded, setExpanded] = useState(false);
+  let [succesSwap, setSuccessSwap] = useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -27,6 +31,33 @@ const EligibleMemberCard = ({ member, replacementShift, allShifts }) => {
   const handleReassign = () => {
     console.log('Reassignment activated');
     console.log('Assigned: ', memberString(member), ' to ', replacementShift);
+
+    const pickUp = async () => {
+      try {
+        const res = await fetch(ApiUrl + `/time_slots/${replacementShift.id}?assignment_adjusted=true`, {
+          method: "PATCH",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({type: 'shift', user_id: member.id}),
+        })
+        const resJson = await res.json();
+  
+        if (res.status !== 201) {
+          alert(resJson)
+          return;
+        }
+
+        //toggle refresh
+
+
+      } catch(err) {
+        console.log(err);
+      }
+    }
+    pickUp();
+    
     
   }
   useEffect(() => {
@@ -78,8 +109,9 @@ const EligibleMemberCard = ({ member, replacementShift, allShifts }) => {
             <Button onClick={handleReassign} variant="contained" >Assign to Shift</Button>
           </CardContent>
 
-
+        {succesSwap ? <Alert severity="success"> Shift Swapped</Alert> : <Blank />}
         </Collapse>
+
       
       </Card>
     </div>
