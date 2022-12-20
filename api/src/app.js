@@ -288,9 +288,17 @@ app.post("/time_slots", validSession, async (req, res) => {
 
 /* PATCH time_slots: */
 app.patch("/time_slots/:id", validSession, async (req, res) => {
+    const { assignment_adjusted } = req.query;
     try {
       const id = parseInt(req.params.id);
       let { body } = req;
+      if (assignment_adjusted === 'true') {
+        console.log("hit")
+        const original_time_slot = await knex('time_slots').where('id', id);
+        const removed_member = original_time_slot[0].user_id;
+        const added_member = body.user_id;
+        await knex('adjusted_assignments').insert({time_slot_id: id, removed_member_id: removed_member, added_member_id: added_member});
+      }
       await knex('time_slots').where('id', id).update(body);
       res.status(201).json("TIME SLOT UPDATED");
     } catch(err) {
