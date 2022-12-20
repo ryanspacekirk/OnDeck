@@ -21,6 +21,8 @@ const shifts = [{start: '2022-12-23 00:00:00', end: '2022-12-23 08:00:00'}, {sta
 {start: '2022-12-18 00:00:00', end: '2022-12-18 08:00:00'},
 {start: '2022-12-18 08:00:00', end: '2022-12-18 16:00:00'}, 
 {start: '2022-12-18 16:00:00', end: '2022-12-19 00:00:00'},
+{start: '2022-12-01 00:00:00', end: '2022-12-01 08:00:00'},
+
 
 
 ];
@@ -214,8 +216,13 @@ exports.seed = async function(knex) {
     await createTime_Slot(0, 9, 0),
     await createTime_Slot(0, 9, 0),
 
+    //temp timeslot for adjusting shifts later
+    //76
+    await createTime_Slot(0, 25, 0)
+
 
 
     
   ]);
+  console.log('TIME SLOTS SEEDED');
 };

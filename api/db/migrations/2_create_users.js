@@ -11,7 +11,7 @@ exports.up = function(knex) {
     table.string('phone_number').notNullable();
     table.enu('role', ['member', 'leader', 'pending'], { useNative: true, enumName: 'role' }).notNullable();
     table.string('rank', 10).notNullable();
-    table.string('username', 20).unique().notNullable();
+    table.string('username', 40).unique().notNullable();
     table.string('passwordHash', 250).notNullable(); 
     table.integer('crew_position_id').notNullable();
     table.foreign('crew_position_id').references('crew_positions.id').onDelete('SET NULL');
