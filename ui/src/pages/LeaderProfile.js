@@ -1,5 +1,6 @@
 import { Container, Typography } from '@mui/material';
-import  { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { MenuItem, Select, Box, Grid, Item, Card } from "@mui/material";
 import { Context } from '../App';
 import axios, { all } from "axios";
@@ -16,6 +17,7 @@ const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
 
 
 const LeaderProfile = () => {
+  const navigate = useNavigate();
   const { user } = useContext(Context);
   let [shiftsNeedingReplacements, setShiftsNeedingReplacements] = useState([]);
   let [crewPositions, setCrewPositions] = useState([]);
@@ -30,7 +32,11 @@ const LeaderProfile = () => {
   let [approvalsPending, setApprovalsPending] = useState([]);
   let [allShifts, setAllShifts] = useState([]);
 
+  //reroutes if user doesn't have access
   useEffect(() => {
+    if (user !== null) {
+        if (user.role !== 'leader') navigate('/accessDenied')
+      }
     const getShiftsNeedingReplacements = async () =>{
       try{
       let res = await axios.get(ApiUrl + '/time_slots', {withCredentials:true});
@@ -39,6 +45,7 @@ const LeaderProfile = () => {
       let replacementList = res.data.filter(shift => shift.type === 'replacement_needed');
       setShiftsNeedingReplacements(replacementList);
                 
+
       } catch (e) {
         console.log('Error finding crew positions LeaderProfile:', e);
 
@@ -46,76 +53,96 @@ const LeaderProfile = () => {
     }
 
     const getCrewPositions = async () => {
-        try{
-          let res = await axios.get(ApiUrl + '/crew_positions', {withCredentials:true});
-          setCrewPositions(res.data);
+      try {
+        let res = await axios.get(ApiUrl + '/crew_positions', { withCredentials: true });
+        setCrewPositions(res.data);
 
 
-        } catch (e) {
-          console.log('Error finding crew positions LeaderProfile:', e);
-        }
-        }
-          getCrewPositions();
+      } catch (e) {
+        console.log('Error finding crew positions LeaderProfile:', e);
 
-        getShiftsNeedingReplacements();
+      }
 
-        const getMembers = async () => {
-          try{
-            let res = await axios.get(ApiUrl + '/users?member', {withCredentials:true});
-            setMemberList(res.data);
-          } catch(e){
-            console.log('Error finding members  in LeaderProfile:', e);
-  
-          }
-        }
-        getMembers();
+    }
+    getCrewPositions();
+
+    getShiftsNeedingReplacements();
+
+
+    const getMembers = async () => {
+      try {
+        let res = await axios.get(ApiUrl + '/users?member', { withCredentials: true });
+        setMemberList(res.data);
+      } catch (e) {
+        console.log('Error finding members  in LeaderProfile:', e);
+
+      }
+    }
+    getMembers();
+
+    //Need to pull all the items awaiting for approval
+
 
         //Need to pull all the items awaiting for approval
         generateOverview(memberList, setOverivewData, allShifts);
         
     }, []);
 
-    useEffect(()=>{
-      generateOverview(memberList, setOverivewData, allShifts);
-      
-      leaderPending(memberList, setLeadersPending);
-      
-      //shiftspendings
-      
-      filterPending(allShifts, setApprovalsPending);
+  useEffect(() => {
+    generateOverview(memberList, setOverivewData, allShifts);
+
+    leaderPending(memberList, setLeadersPending);
+
+    //shiftspendings
+
+    filterPending(allShifts, setApprovalsPending);
+
+
+  }, [memberList])
+
+  useEffect(() => {
+
+    if (shiftSelected !== -1) {
+      setShowFindReplacement(true);
+
+    }
+    else {
+      setShowFindReplacement(false);
+    }
 
 
 
-    }, [memberList])
 
-    useEffect(() => {
-      
-      if(shiftSelected !== -1){
-        setShowFindReplacement(true);
+  }, [shiftSelected]);
 
-      }
-      else{
-        setShowFindReplacement(false);
-      }  
+  //Use effect that is called any time there is an update to the shift list from the server
+  useEffect(() => {
 
-    }, [shiftSelected]);
 
-    //Use effect that is called any time there is an update to the shift list from the server
-    useEffect(() => {
-      
+    let replacementList = allShifts.filter(shift => shift.type === 'replacement_needed');
+    setShiftsNeedingReplacements(replacementList);
+    filterPending(allShifts, setApprovalsPending);
+    leaderPending(memberList, setLeadersPending);
 
-      let replacementList = allShifts.filter(shift => shift.type === 'replacement_needed');
-      setShiftsNeedingReplacements(replacementList);
-      filterPending(allShifts, setApprovalsPending);
-      leaderPending(memberList, setLeadersPending);
-
-      //all shifts have been updated. Need to see how many of a certain crew type are available
-
+    //all shifts have been updated. Need to see how many of a certain crew type are available
 
     }, [allShifts]);
 
 
     useEffect(() => {
+      const getMembersNeedingReplacements = async () => {
+        try{
+          let res = await axios.get(ApiUrl + '/users?member', {withCredentials:true});
+          setMemberList(res.data);
+
+
+
+
+
+  }, [allShifts]);
+
+
+  useEffect(() => {
       const getMembersNeedingReplacements = async () => {
         try{
           let res = await axios.get(ApiUrl + '/users?member', {withCredentials:true});
@@ -134,7 +161,7 @@ const LeaderProfile = () => {
     }, [shiftsNeedingReplacements]);
 
 
-    return (
+  return (
       <div className='LeaderProfile'>
         <Container>
           <Box>
