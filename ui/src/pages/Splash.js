@@ -12,18 +12,22 @@ const ApiUrl = config[process.env.REACT_APP_NODE_ENV || 'development'].apiUrl;
 // npm i devextreme
 // npm i devextreme-react 
 
+// npm i devextreme piechart
+// npm i devextreme chart
 
-const Splash2 = () => {
+
+const Splash = () => {
 
     const { user } = useContext(Context);
     const [timeSlots, setTimeSlots] = useState([]);
     const [replacementTimeSlots, setReplacementTimeSlots] = useState([]);
-    const navigate = useNavigate();
     const [pieChartData, setPieChartData] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getTimeSlots = async () => {
             try {
+                console.log("fetch attempted")
                 let res = await fetch(ApiUrl + '/time_slots', { credentials: 'include' });
                 let resJson = await res.json();
                 if (res.status !== 200) alert(resJson);
@@ -35,8 +39,11 @@ const Splash2 = () => {
                 if (res.status !== 200) alert(resJson);
                 setReplacementTimeSlots(resJson);
 
-            } catch (err) { console.log(err) }
+            } catch (err) { console.log("fetched failed",err) }
         }
+        console.log("useeffect triggered")
+        console.log('user', user)
+        console.log(document.cookie)
         if (user !== null) getTimeSlots();
 
     }, [user])
@@ -66,9 +73,8 @@ const Splash2 = () => {
     //     { type: 'Unavailable', area: 5 },
     // ];
 
-
-    console.log("replacements", replacementTimeSlots)
-    console.log("timeslots", timeSlots)
+    // console.log("replacements", replacementTimeSlots)
+    // console.log("timeslots", timeSlots)
 
     useEffect(() => {
         setPieChartData([
@@ -79,36 +85,36 @@ const Splash2 = () => {
 
     return (
         <div className='Splash' >
-            {pieChartData.length === 0 ? <>Loading</> : <>
-                <Grid container justifyContent="space-between" direction="row" alignItems="baseline" sx={{ marginTop: '20px', marginBottom: '20px' }}>
-                    <Button size="small" variant='contained' sx={{ marginLeft: '40px' }} onClick={() => navigate('/member')}>Return to Profile</Button>
-                    <Typography variant='h4' fontWeight='bold'>Shift Overview</Typography>
-                    <Box sx={{ width: 200 }}></Box>
-                </Grid>
-
-                <Card sx={{ marginLeft: '40px', marginRight: '40px' }}>
-                    <Grid container justifyContent="center" sx={{ marginLeft: '200px', marginTop: '20px' }}>
-                        <Grid item xl={7} lg={8} md={8} sm={8}>
-                            <PieChart2 data={pieChartData} />
-                        </Grid>
+            {pieChartData.length === 0 && timeSlots.length + replacementTimeSlots.length > 0 ?
+                <><Typography variant='h6' align='center'>Loading...</Typography></>
+                : <>
+                    <Grid container justifyContent="space-between" direction="row" alignItems="baseline" sx={{ marginTop: '20px', marginBottom: '20px' }}>
+                        <Button size="small" variant='contained' sx={{ marginLeft: '40px' }} onClick={() => navigate('/member')}>Return to Profile</Button>
+                        <Typography variant='h4' fontWeight='bold'>Shift Overview</Typography>
+                        <Box sx={{ width: 200 }}></Box>
                     </Grid>
 
-                    <BarChart2 width={0} /> {/* for some reason the piechart disrupts the animation of the next graph, I put an empty invisible one here to resolve the issue */}
+                    <Card sx={{ marginLeft: '40px', marginRight: '40px' }}>
+                        <Grid container justifyContent="center" sx={{ marginLeft: '200px', marginTop: '20px' }}>
+                            <Grid item xl={7} lg={8} md={8} sm={8}>
+                                <PieChart2 data={pieChartData} />
+                            </Grid>
+                        </Grid>
 
-                    <Grid container direction="row" justifyContent="space-evenly">
-                        <Grid item xl={5} lg={5} md={7} sm={9}>
-                            <BarChart2 data={goodBoyData} name="Shifts picked up" color="green" width={525} />
+                        <Grid container direction="row" justifyContent="space-evenly">
+                            <Grid item xl={5} lg={5} md={7} sm={9}>
+                                <BarChart2 data={goodBoyData} name="Shifts picked up" color="green" width={525} />
+                            </Grid>
+                            <Grid item xl={5} lg={5} md={7} sm={9}>
+                                <BarChart2 data={slackerData} name="Shifts dropped" color="darkred" width={525} />
+                            </Grid>
                         </Grid>
-                        <Grid item xl={5} lg={5} md={7} sm={9}>
-                            <BarChart2 data={slackerData} name="Shifts dropped" color="darkred" width={525} />
-                        </Grid>
-                    </Grid>
+                        <br /> <br />
+                    </Card>
                     <br /> <br />
-                </Card>
-                <br /> <br />
-            </>}
+                </>}
         </div>
     )
 }
 
-export default Splash2;
+export default Splash;
