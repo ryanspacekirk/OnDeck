@@ -145,6 +145,17 @@ exports.seed = async function(knex) {
     //Foxtrot Crew
     await createMember(0, 2),
     await createMember(1, 2),
+    await createMember(2, 2),
+
+    /////////////////////////
+    //Gulf Crew
+    await createMember(0, 2),
+    await createMember(1, 2),
+    await createMember(2, 2),
+
+    //Hotel Crew
+    await createMember(0, 2),
+    await createMember(1, 2),
     await createMember(2, 2)
 
 

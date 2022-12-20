@@ -64,7 +64,7 @@ const EligibleMemberCard = ({ member, replacementShift, allShifts }) => {
             </Typography>
 
             <Typography mt={1}>
-            Last Shift: {dateInfo(shiftHelper(member, allShifts).next)}
+            Next Shift: {dateInfo(shiftHelper(member, allShifts).next)}
             </Typography>
 
             <Typography mt={1}>

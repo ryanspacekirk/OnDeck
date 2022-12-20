@@ -50,7 +50,7 @@ export const doubleFilter = async(members, shifts) => {
   return tempList;
 }
 
-export const generateOverview = (members, overviewSetter) => {
+export const generateOverview = (members, overviewSetter, allShifts) => {
 
   let tempData = {
     numCommander: -1,
@@ -65,6 +65,15 @@ export const generateOverview = (members, overviewSetter) => {
   tempData.numCommander = members.filter(member => member.crew_position_id === 1).length;
   tempData.numSVO = members.filter(member => member.crew_position_id === 2).length;
   tempData.numGSO = members.filter(member => member.crew_position_id === 3).length;
+
+  //find number of crew memembers that are not working the next 24 hour period
+  let tempDay = new Date();
+  tempData.numCommanderAvail = generateNumReplacements(tempDay, members, 1, allShifts);
+  tempData.numSVOAvail = generateNumReplacements(tempDay, members, 2, allShifts);
+  tempData.numGSOAvail = generateNumReplacements(tempDay, members, 3, allShifts);
+
+
+
 
   overviewSetter(tempData);
 
@@ -194,34 +203,62 @@ export const shiftHelper = (member, shifts) => {
   }
   else{
     let elf = {
-      next: new Date(memberShifts[0].start_datetime),
+      next: new Date(memberShifts[memberShifts.length - 1].start_datetime),
       last: new Date(memberShifts[0].start_datetime),
     };
     let curTime = new Date();
-    console.log('Before Loop Current Time:', curTime)
-    console.log('Before Loop Elf:', elf)
+    
   
     memberShifts.forEach((shift) => {
-      let shiftTime = new Date(shift.start_datetime)
-      if((curTime - shiftTime) > 0){// Shift happened in the past
-        if(shiftTime > elf.last){
-          elf.last = shiftTime;
-        }
-  
-      } else{// Shift is happening in the future
-        if(shiftTime < elf.next){
-          elf.next = shiftTime;
-        }
-  
-  
+      let shiftTime = new Date(shift.start_datetime);
+      if(((shiftTime - elf.last) > 0 ) && ((curTime - shiftTime) > 0)){//execute if there was a shift more recently
+        elf.last = shiftTime;
+
       }
-      
+
+      if(((elf.next - shiftTime) > 0 ) && ((shiftTime - curTime) > 0)){//execute if there was a shift more recently
+        elf.next = shiftTime;
+
+      }
     })
     
-    console.log('After Loop Elf:', elf)
+    
     return elf;
 
   }
   
   
+}
+
+
+
+export const generateNumReplacements = async (shiftDate, members, postionID, shifts) => {
+  
+  let timeEligible = [];
+  
+  let positionEligible = members.filter(member  => member.crew_position_id === postionID);
+  
+  //filter by time;
+  positionEligible.forEach((member => {
+    //for each member that matches the shifts crew position id
+    let thisMemberShifts = shifts.filter((individualShift) => individualShift.user_id === member.id);
+    if(workPast24(thisMemberShifts, shiftDate)){
+      //member did work in the last 24 hours
+    }
+    else{
+      if(workNext24(thisMemberShifts, shiftDate)){
+        //They do work in the next 24 hours
+      }
+      else{
+        //they dont work the next 24 hours
+        timeEligible.push(member);
+      }
+    }
+    
+    
+    //1. Check the last time they worked. If it is within 24 hours of the shift starting they are not eligible
+    //2. if they are free 24 hours before... make sure they don't have a shift starting in the next 24 hours
+
+  }))
+
 }

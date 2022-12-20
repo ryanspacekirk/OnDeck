@@ -94,7 +94,7 @@ const LeaderProfile = () => {
     }, []);
 
     useEffect(()=>{
-      generateOverview(memberList, setOverivewData);
+      generateOverview(memberList, setOverivewData, allShifts);
       
       leaderPending(memberList, setLeadersPending);
       
