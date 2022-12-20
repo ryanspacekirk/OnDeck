@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import RankSelect from "../RankSelect";
 import PositonSelector from "../PositionSelector";
 import EligibleMemberCard from "../EligibleMemberCard";
+import axios, { all } from "axios";
 import config from '../../config'
 import { dateInfo, timeInfo, returnMemberDetail, findPossibleReplacements } from "../../helpers";
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
@@ -25,13 +26,22 @@ const style = {
 
 
 
-const FindReplacement = ({ showFindReplacement, shiftSelected, shift, members, shifts }) => {
+const FindReplacement = ({ showFindReplacement, shiftSelected, shift, members, shifts, setShifts }) => {
   let [findReplacementOpen, setFindReplacementOpen] = useState(true);
   let [eligibleMembers, setEligibleMembers] = useState([]);
 
-  const handleFindReplacementClose = () => {
+  const handleFindReplacementClose = async() => {
     setFindReplacementOpen(false);
     shiftSelected(-1);
+
+    try{
+      let res = await axios.get(ApiUrl + '/time_slots', {withCredentials:true});
+      setShifts(res.data);
+
+      } catch (e) {
+        console.log('Error finding all shifts from findreplacement.js :', e);
+      }
+
   
 
   }

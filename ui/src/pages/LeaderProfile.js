@@ -249,7 +249,7 @@ const LeaderProfile = () => {
 
             
           </Box>
-          {showFindReplacement ? <FindReplacement showFindReplacement={setShowFindReplacement} shiftSelected={setShiftSelected} shift={shiftSelected}   members={memberList} shifts={allShifts}/> : <Blank />}
+          {showFindReplacement ? <FindReplacement key={shiftSelected.id} showFindReplacement={setShowFindReplacement} shiftSelected={setShiftSelected} shift={shiftSelected}   members={memberList} shifts={allShifts} setShifts={setAllShifts}/> : <Blank />}
             
 
         </Container>
