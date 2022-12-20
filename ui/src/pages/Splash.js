@@ -3,38 +3,37 @@ import { Context } from '../App';
 import { useContext, useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import { Grid, Box, Button, Typography, Card } from "@mui/material";
-import BarChart2 from "../components/BarChart2";
-import PieChart2 from '../components/PieChart2';
+import BarChart from "../components/BarChart";
+import PieGraph from '../components/PieGraph';
 import config from '../config';
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || 'development'].apiUrl;
-
-//FOLLOWING COMMANDS NEEDED FOR GRAPHS TO WORK
-// npm i devextreme
-// npm i devextreme-react 
-
-// npm i devextreme piechart
-// npm i devextreme chart
-
 
 const Splash = () => {
 
     const { user } = useContext(Context);
     const [timeSlots, setTimeSlots] = useState([]);
     const [replacementTimeSlots, setReplacementTimeSlots] = useState([]);
+    const [pendingTimeSlots, setPendingTimeSlots] = useState([]);
     const [pieChartData, setPieChartData] = useState([]);
     const [crewPositions, setCrewPositions] = useState([]);
     const [positionData, setPositionData] = useState([]);
     const [donutData, setDonutData] = useState([]);
     const navigate = useNavigate();
 
-    useEffect(() => {
+    // useEffect(() => {
+    //     if (user === null) navigate('/accessDenied')
+    //   }, [user])
+
+    //fetches for all information to be displayed
+    useEffect(() => {   
         const getTimeSlots = async () => {
             try {
                 let res = await fetch(ApiUrl + '/time_slots', { credentials: 'include' });
                 let resJson = await res.json();
                 if (res.status !== 200) alert(resJson);
-                resJson = resJson.filter(slot => slot.type === 'shift').sort((a, b) => new Date(a.start_datetime) - new Date(b.start_datetime));
-                setTimeSlots(resJson);
+                console.log('shifts',resJson)
+                setTimeSlots(resJson.filter(slot => slot.type === 'shift'));
+                setPendingTimeSlots(resJson.filter(slot => slot.type === 'pending_replacement'));
 
                 res = await fetch(ApiUrl + '/time_slots?need_replacement=true', { credentials: 'include' });
                 resJson = await res.json();
@@ -57,6 +56,7 @@ const Splash = () => {
 
     }, [user])
 
+    //sets crew position data
     useEffect(() => {
         const counts = {};
         const donut = [];
@@ -64,9 +64,8 @@ const Splash = () => {
             counts[user.crew_position_id] = counts[user.crew_position_id] ? counts[user.crew_position_id] + 1 : 1;
         }
         for (const position of crewPositions) {
-            donut.push({type: position.description, area: position.id})
+            donut.push({ type: position.description, area: position.id })
         }
-        console.log('donut', donut)
         setDonutData(donut)
     }, [crewPositions, positionData])
 
@@ -88,17 +87,27 @@ const Splash = () => {
         { name: "SSgt Sally", status: 1 },
     ];
 
+    // sets shift data
     useEffect(() => {
         setPieChartData([
             { type: 'Filled Shifts', area: timeSlots.length },
             { type: 'Replacement Needed', area: replacementTimeSlots.length },
+            { type: 'Drop Request Pending', area: pendingTimeSlots.length },
         ])
-    }, [timeSlots, replacementTimeSlots])
+    }, [timeSlots, replacementTimeSlots, pendingTimeSlots])
+
+    // makes return function wait until data has loaded
+    function render() {
+        return (
+            pieChartData.length === 0 ||
+            timeSlots.length + replacementTimeSlots.length + pendingTimeSlots === 0 ||
+            donutData.length === 0
+        )
+    }
 
     return (
         <div className='Splash' >
-            {pieChartData.length === 0 && timeSlots.length + replacementTimeSlots.length > 0 ?
-                <><Typography variant='h6' align='center'>Loading...</Typography></>
+            {render() ? <><Typography variant='h6' align='center' sx={{ marginTop: '20px' }}>Loading...</Typography></>
                 : <>
                     <Grid container justifyContent="space-between" direction="row" alignItems="baseline" sx={{ marginTop: '20px', marginBottom: '20px' }}>
                         <Button size="small" variant='contained' sx={{ marginLeft: '40px' }} onClick={() => navigate('/member')}>Return to Profile</Button>
@@ -108,20 +117,20 @@ const Splash = () => {
 
                     <Card sx={{ marginLeft: '40px', marginRight: '40px' }}>
                         <Grid container direction="row" justifyContent="space-evenly" sx={{ marginTop: '20px' }}>
-                            <Grid item xl={7} lg={8} md={8} sm={8}>
-                                <PieChart2 data={pieChartData} />
+                            <Grid item xl={5} lg={5} md={7} sm={9}>
+                                <PieGraph data={pieChartData} type={"pie"} palette={["#73d47f", "#fb7764", "#fed85e"]}/>
                             </Grid>
-                            <Grid item xl={7} lg={8} md={8} sm={8}>
-                                <PieChart2 data={donutData} />
+                            <Grid item xl={5} lg={5} md={7} sm={9}>
+                                <PieGraph data={donutData} type={"donut"} palette={"office"}/>
                             </Grid>
                         </Grid>
 
                         <Grid container direction="row" justifyContent="space-evenly">
                             <Grid item xl={5} lg={5} md={7} sm={9}>
-                                <BarChart2 data={goodBoyData} name="Shifts picked up" color="green" width={525} />
+                                <BarChart data={goodBoyData} name="Shifts picked up" color="green" width={525} />
                             </Grid>
                             <Grid item xl={5} lg={5} md={7} sm={9}>
-                                <BarChart2 data={slackerData} name="Shifts dropped" color="darkred" width={525} />
+                                <BarChart data={slackerData} name="Shifts dropped" color="darkred" width={525} />
                             </Grid>
                         </Grid>
                         <br /> <br />

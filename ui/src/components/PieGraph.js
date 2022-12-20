@@ -4,7 +4,7 @@ import PieChart, { Series, Label, Connector, Size, Legend } from 'devextreme-rea
 // npm i devextreme
 // npm i devextreme-react 
 
-export default function PieChart2({ data }) {
+export default function PieGraph({ data , type, palette}) {
 
     // function pointClickHandler(e) {
     //     toggleVisibility(e.target);
@@ -24,7 +24,8 @@ export default function PieChart2({ data }) {
         <PieChart
             id="pie"
             dataSource={data}
-            palette="Bright"
+            palette={palette}
+            type={type}
             title=""
             // onPointClick={pointClickHandler}
             // onLegendClick={legendClickHandler}
