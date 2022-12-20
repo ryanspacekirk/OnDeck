@@ -91,7 +91,7 @@ const Member = () => {
                   <hr/>
                 </CardContent>
                 <CardActions sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
-                  <Button size="small" variant='contained' onClick={shiftOverview}>See Shift Overview</Button> :
+                  <Button size="small" variant='contained' onClick={shiftOverview}>See Shift Overview</Button>
                   <Button size="small" variant='contained' onClick={calendar}>See Calendar</Button>
                 </CardActions>
               </Card>

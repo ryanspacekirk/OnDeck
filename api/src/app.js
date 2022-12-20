@@ -99,6 +99,15 @@ app.delete('/logout', (req, res) => {
   }
 })
 
+// REFRESH: sends session data on page refresh
+app.get("/refresh", async (req, res) => {
+  try {
+    res.status(401).send(req.session);
+  } catch(err) {
+    res.status(500).json("Username does not exist")
+  }
+})
+
 // Custom Middleware to validate session
 const validSession = (req, res, next) => {
   console.log(req.session);
