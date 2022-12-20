@@ -167,4 +167,4 @@ exports.seed = async function(knex) {
     
   ]);
   console.log('USERS SEEDED');
-};
+  };
