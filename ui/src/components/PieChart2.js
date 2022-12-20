@@ -6,19 +6,19 @@ import PieChart, { Series, Label, Connector, Size, Legend } from 'devextreme-rea
 
 export default function PieChart2({ data }) {
 
-    function pointClickHandler(e) {
-        toggleVisibility(e.target);
-    }
+    // function pointClickHandler(e) {
+    //     toggleVisibility(e.target);
+    // }
 
-    function legendClickHandler(e) {
-        const arg = e.target;
-        const item = e.component.getAllSeries()[0].getPointsByArg(arg)[0];
-        toggleVisibility(item);
-    }
+    // function legendClickHandler(e) {
+    //     const arg = e.target;
+    //     const item = e.component.getAllSeries()[0].getPointsByArg(arg)[0];
+    //     toggleVisibility(item);
+    // }
 
-    function toggleVisibility(item) {
-        item.isVisible() ? item.hide() : item.show();
-    }
+    // function toggleVisibility(item) {
+    //     item.isVisible() ? item.hide() : item.show();
+    // }
 
     return (
         <PieChart
@@ -26,8 +26,8 @@ export default function PieChart2({ data }) {
             dataSource={data}
             palette="Bright"
             title=""
-            onPointClick={pointClickHandler}
-            onLegendClick={legendClickHandler}
+            // onPointClick={pointClickHandler}
+            // onLegendClick={legendClickHandler}
         >
             <Series
                 argumentField="type"

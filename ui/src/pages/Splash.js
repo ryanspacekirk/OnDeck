@@ -22,12 +22,14 @@ const Splash = () => {
     const [timeSlots, setTimeSlots] = useState([]);
     const [replacementTimeSlots, setReplacementTimeSlots] = useState([]);
     const [pieChartData, setPieChartData] = useState([]);
+    const [crewPositions, setCrewPositions] = useState([]);
+    const [positionData, setPositionData] = useState([]);
+    const [donutData, setDonutData] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
         const getTimeSlots = async () => {
             try {
-                console.log("fetch attempted")
                 let res = await fetch(ApiUrl + '/time_slots', { credentials: 'include' });
                 let resJson = await res.json();
                 if (res.status !== 200) alert(resJson);
@@ -39,14 +41,34 @@ const Splash = () => {
                 if (res.status !== 200) alert(resJson);
                 setReplacementTimeSlots(resJson);
 
-            } catch (err) { console.log("fetched failed",err) }
+                res = await fetch(ApiUrl + '/crew_positions', { credentials: 'include' });
+                resJson = await res.json();
+                if (res.status !== 200) alert(resJson);
+                setCrewPositions(resJson);
+
+                res = await fetch(ApiUrl + '/users', { credentials: 'include' });
+                resJson = await res.json();
+                if (res.status !== 200) alert(resJson);
+                setPositionData(resJson);
+
+            } catch (err) { console.log("fetched failed", err) }
         }
-        console.log("useeffect triggered")
-        console.log('user', user)
-        console.log(document.cookie)
         if (user !== null) getTimeSlots();
 
     }, [user])
+
+    useEffect(() => {
+        const counts = {};
+        const donut = [];
+        for (const user of positionData) {
+            counts[user.crew_position_id] = counts[user.crew_position_id] ? counts[user.crew_position_id] + 1 : 1;
+        }
+        for (const position of crewPositions) {
+            donut.push({type: position.description, area: position.id})
+        }
+        console.log('donut', donut)
+        setDonutData(donut)
+    }, [crewPositions, positionData])
 
     const goodBoyData = [
         { name: "Spc1 Timmy", status: 6 },
@@ -65,16 +87,6 @@ const Splash = () => {
         { name: "Spc3 Johnny", status: 2 },
         { name: "SSgt Sally", status: 1 },
     ];
-
-    // const sampleShift = [
-    //     { type: 'Shift', area: 12 },
-    //     { type: 'Absent', area: 4 },
-    //     { type: 'Replacement Needed', area: 7 },
-    //     { type: 'Unavailable', area: 5 },
-    // ];
-
-    // console.log("replacements", replacementTimeSlots)
-    // console.log("timeslots", timeSlots)
 
     useEffect(() => {
         setPieChartData([
@@ -95,9 +107,12 @@ const Splash = () => {
                     </Grid>
 
                     <Card sx={{ marginLeft: '40px', marginRight: '40px' }}>
-                        <Grid container justifyContent="center" sx={{ marginLeft: '200px', marginTop: '20px' }}>
+                        <Grid container direction="row" justifyContent="space-evenly" sx={{ marginTop: '20px' }}>
                             <Grid item xl={7} lg={8} md={8} sm={8}>
                                 <PieChart2 data={pieChartData} />
+                            </Grid>
+                            <Grid item xl={7} lg={8} md={8} sm={8}>
+                                <PieChart2 data={donutData} />
                             </Grid>
                         </Grid>
 
