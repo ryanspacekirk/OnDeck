@@ -1,4 +1,4 @@
-import { Container, Typography } from '@mui/material';
+import { Button, Container, Typography } from '@mui/material';
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MenuItem, Select, Box, Grid, Item, Card } from "@mui/material";
@@ -12,6 +12,7 @@ import Blank from '../components/Blank';
 import ApprovalRequest from '../components/ApprovalRequest';
 import ApprovalRequestShift from '../components/ApprovalRequestShift';
 import config from '../config';
+import { Stack } from '@mui/system';
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
 
 
@@ -129,17 +130,6 @@ const LeaderProfile = () => {
     }, [allShifts]);
 
 
-    useEffect(() => {
-      const getMembersNeedingReplacements = async () => {
-        try{
-          let res = await axios.get(ApiUrl + '/users?member', {withCredentials:true});
-          setMemberList(res.data);
-
-
-
-
-
-  }, [allShifts]);
 
 
   useEffect(() => {
@@ -165,26 +155,26 @@ const LeaderProfile = () => {
       <div className='LeaderProfile'>
         <Container>
           <Box>
-          <Typography>Shifts that need to be filled!</Typography>
+          
           <Box>
-            <Grid container spacing={2} >
+            <Grid container spacing={2} mt={2}>
               <Grid item xs={4}>
-                <Card> Total # of commanders {overviewData.numCommander}</Card>
+                <Card> <Typography display="inline" variant='h6'> Total Commanders:</Typography> <Typography display="inline" variant='h4'>{overviewData.numCommander}</Typography></Card>
               </Grid>
               <Grid item xs={4}>
-                <Card> Total # of SVOs {overviewData.numSVO}</Card>
+                <Card> <Typography display="inline" variant='h6'> Total SVOs:</Typography> <Typography display="inline" variant='h4'>{overviewData.numSVO}</Typography></Card> 
               </Grid>
               <Grid item xs={4}>
-                <Card> Total # of GSOs {overviewData.numGSO}</Card>
+                <Card> <Typography display="inline" variant='h6'> Total GSOs:</Typography> <Typography display="inline" variant='h4'>{overviewData.numGSO}</Typography></Card>
               </Grid>
               <Grid item xs={4}>
-                <Card> Total # of commanders currently avaialable {overviewData.numCommanderAvail}</Card>
+                <Card> <Typography display="inline" variant='h6'> Currently Available:</Typography> <Typography display="inline" variant='h4'>{overviewData.numCommanderAvail}</Typography></Card>
               </Grid>
               <Grid item xs={4}>
-                <Card> Total # of SVOs currently avaialable {overviewData.numSVOAvail}</Card>
+                <Card> <Typography display="inline" variant='h6'> Currently Available:</Typography> <Typography display="inline" variant='h4'>{overviewData.numSVOAvail}</Typography></Card>
               </Grid>
               <Grid item xs={4}>
-                <Card> Total # of GSOs currently avaialable {overviewData.numGSOAvail}</Card>
+                <Card><Typography display="inline" variant='h6'> Currently Available:</Typography> <Typography display="inline" variant='h4'>{overviewData.numSVO}</Typography></Card>
               </Grid>
             </Grid>
           </Box>
@@ -233,6 +223,12 @@ const LeaderProfile = () => {
             
 
         </Container>
+        <Stack direction="row" mt={6}>
+          <Button onClick={(e) => {navigate('/calendar')}}>Calendar</Button>
+          <Button onClick={(e) => {navigate('/splash')}}>Overview</Button>
+          <Button onClick={(e) => {navigate('/alpha_roster')}}>Alpha Roster</Button>
+        </Stack>
+
 
         </div>
     )

@@ -7,6 +7,7 @@ import Calendar from './pages/Calendar';
 import Member from './pages/Member';
 import LeaderProfile from './pages/LeaderProfile';
 import UnauthorizedAccess from './pages/UnauthorizedAccess';
+import AlphaRoster from './pages/AlphaRoster';
 import './App.css'
 import { Pending } from './pages/Pending';
 import Redirect from './components/Redirect';
@@ -30,6 +31,7 @@ function App() {
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/pending" element={<Pending />} />
             <Route path="/accessDenied" element={<UnauthorizedAccess />} />
+            <Route path="/alpha_roster" element={<AlphaRoster />} />
           </Routes>
         </BrowserRouter>
       </Context.Provider>
