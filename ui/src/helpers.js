@@ -1,3 +1,4 @@
+import { ConstructionOutlined } from "@mui/icons-material";
 import axios from "axios";
 import config from './config';
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
@@ -51,6 +52,7 @@ export const doubleFilter = async(members, shifts) => {
 }
 
 export const generateOverview = (members, overviewSetter, allShifts) => {
+  
 
   let tempData = {
     numCommander: -1,
@@ -68,9 +70,16 @@ export const generateOverview = (members, overviewSetter, allShifts) => {
 
   //find number of crew memembers that are not working the next 24 hour period
   let tempDay = new Date();
-  tempData.numCommanderAvail = generateNumReplacements(tempDay, members, 1, allShifts);
-  tempData.numSVOAvail = generateNumReplacements(tempDay, members, 2, allShifts);
-  tempData.numGSOAvail = generateNumReplacements(tempDay, members, 3, allShifts);
+  
+  tempData.numCommanderAvail =  generateNumReplacements(tempDay, members, 1, allShifts);
+  
+  
+  tempData.numSVOAvail =  generateNumReplacements(tempDay, members, 2, allShifts);
+  tempData.numGSOAvail =  generateNumReplacements(tempDay, members, 3, allShifts);
+
+  
+
+
 
 
 
@@ -129,63 +138,81 @@ export const matchMember = async (memebrs, shift, setMemebr) => {
 }
 
 const workPast24 = (shiftList, shiftDate) => {
-  shiftList.forEach((shift) => {
-    let workedShiftTime = new Date(shift.start_datetime);
-    if((shiftDate - workedShiftTime) > dayMili){
-      //did not work in the past 24 hours
-      
-      return false;
-    }
-    else{
-      return true;
-    }
+  let  returnValue = false;
+  
+  
+  if(shiftList[0] !== undefined){
     
-  })
+
+    shiftList.forEach((shift) => {
+      let workedShiftTime = new Date(shift.start_datetime);
+      let timeBetwenShifts = shiftDate - workedShiftTime;
+      if((timeBetwenShifts > 0) && (timeBetwenShifts < dayMili)){
+        
+        returnValue = true;
+      }
+      
+    })
+
+  }
+
+  
+  return returnValue;
+  
   
 }
 
 const workNext24 = (shiftList, shiftDate) => {
-  shiftList.forEach((shift) => {
-    let nextShiftTime = new Date(shift.start_datetime);
-    if((nextShiftTime - shiftDate) > dayMili ){
-      return false;
-    }
-    else{
-      return true;
-    }
-  })
+  let returnValue = false;
+
+  
+ 
+  if(shiftList[0] !== undefined){
+    
+
+    shiftList.forEach((shift) => {
+      let workedShiftTime = new Date(shift.start_datetime);
+      let timeBetwenShifts = workedShiftTime - shiftDate;
+      
+      if((timeBetwenShifts > 0) && (timeBetwenShifts < dayMili)){
+        
+        returnValue = true;
+      }
+      
+    })
+
+  }
+  
+  return returnValue;
 
 }
 
 
-export const findPossibleReplacements = async (shift, members, setEligibleMembers, shifts) => {
+export const findPossibleReplacements =  (shift, members, setEligibleMembers, shifts) => {
+  
+  
   let shiftDate = new Date(shift.start_datetime);
   let timeEligible = [];
-  
-  let positionEligible = members.filter(member  => member.crew_position_id === shift.crew_position_id);
-  
-  //filter by time;
+  let positionEligible = members.filter(member  => member.crew_position_id === shift.crew_position_id);  
   positionEligible.forEach((member => {
-    //for each member that matches the shifts crew position id
     let thisMemberShifts = shifts.filter((individualShift) => individualShift.user_id === member.id);
-    if(workPast24(thisMemberShifts, shiftDate)){
-      //member did work in the last 24 hours
-    }
-    else{
-      if(workNext24(thisMemberShifts, shiftDate)){
-        //They do work in the next 24 hours
-      }
-      else{
-        //they dont work the next 24 hours
-        timeEligible.push(member);
-      }
+
+    let didWorkLast24 = false;
+    let didWorkNext24 = false;
+      
+    didWorkLast24 =  workPast24(thisMemberShifts, shiftDate);
+    didWorkNext24 =  workNext24(thisMemberShifts, shiftDate);
+
+    if(!didWorkLast24 && !didWorkNext24){
+      
+      timeEligible.push(member);
     }
     
-    setEligibleMembers(timeEligible);
     //1. Check the last time they worked. If it is within 24 hours of the shift starting they are not eligible
     //2. if they are free 24 hours before... make sure they don't have a shift starting in the next 24 hours
 
   }))
+  setEligibleMembers(timeEligible);
 
 }
 
@@ -232,33 +259,40 @@ export const shiftHelper = (member, shifts) => {
 
 
 
-export const generateNumReplacements = async (shiftDate, members, postionID, shifts) => {
+export const generateNumReplacements =  (shiftDate, members, postionID, shifts) => {
+  
   
   let timeEligible = [];
   
   let positionEligible = members.filter(member  => member.crew_position_id === postionID);
-  
-  //filter by time;
+
   positionEligible.forEach((member => {
     //for each member that matches the shifts crew position id
     let thisMemberShifts = shifts.filter((individualShift) => individualShift.user_id === member.id);
-    if(workPast24(thisMemberShifts, shiftDate)){
-      //member did work in the last 24 hours
+    
+    let didWorkLast24 = false;
+    let didWorkNext24 = false;
+      
+    didWorkLast24 =  workPast24(thisMemberShifts, shiftDate);
+    didWorkNext24 =  workNext24(thisMemberShifts, shiftDate);
+
+    if(!didWorkLast24 && !didWorkNext24){
+      
+      timeEligible.push(member);
     }
-    else{
-      if(workNext24(thisMemberShifts, shiftDate)){
-        //They do work in the next 24 hours
-      }
-      else{
-        //they dont work the next 24 hours
-        timeEligible.push(member);
-      }
-    }
+    
+    
+    
+    // let returnVal = timeEligible.length;
+    
+
+    
     
     
     //1. Check the last time they worked. If it is within 24 hours of the shift starting they are not eligible
     //2. if they are free 24 hours before... make sure they don't have a shift starting in the next 24 hours
 
-  }))
+  }));
+  return timeEligible.length;
 
 }
