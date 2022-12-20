@@ -54,10 +54,7 @@ exports.seed = async function(knex) {
       rank: '',
       username: '',
       passwordHash: '',
-      crew_position_id: crew_position_ids[crewType],
-      created_at:knex.fn.now() ,
-      updated_at:knex.fn.now()  
-  
+      crew_position_id: crew_position_ids[crewType]
     }
      member.passwordHash = await passwordGenerator();
      member.first_name = await faker.name.firstName();
@@ -156,10 +153,18 @@ exports.seed = async function(knex) {
     //Hotel Crew
     await createMember(0, 2),
     await createMember(1, 2),
+    await createMember(2, 2),
+
+    //Indigo Crew
+    await createMember(0, 2),
+    await createMember(1, 2),
     await createMember(2, 2)
+
+
 
 
     
     
   ]);
+  console.log('USERS SEEDED');
 };

@@ -10,5 +10,7 @@ exports.seed = async function(knex) {
     { name: 'SVO', description: 'Satellite Vehicle Operator', created_at:knex.fn.now() , updated_at:knex.fn.now() },
     { name: 'GSO', description: 'Ground System Operator', created_at:knex.fn.now() , updated_at:knex.fn.now() }
     
+    
   ]);
+  console.log('CREW POSITIONS SEEDED');
 };
