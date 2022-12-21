@@ -11,7 +11,7 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 450,
-  bgcolor: 'background.paper',
+  bgcolor: '#242526',
   borderRadius: '5px',
   boxShadow: 24,
   p: 4,
@@ -180,7 +180,7 @@ const CreateAccount = ({ showCreate }) => {
             <TextField onChange={handleChange}  id="password" type='password' variant="outlined" label="Password" name='password' error={error.password}></TextField>
             <FormHelperText error={error.password} sx={{visibility: !error.password ? 'hidden':'visible'}}>Password is Required</FormHelperText>
           </FormControl>
-          <Button type='submit' variant="contained" sx={{padding: '15px'}}>CREATE ACCOUNT</Button>
+          <Button type='submit' variant="contained" sx={{backgroundColor: '#1da1f2', color: 'white', padding: '15px'}}>CREATE ACCOUNT</Button>
       </Box>
     </Modal>
   );

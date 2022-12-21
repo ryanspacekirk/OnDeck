@@ -1,10 +1,16 @@
 import { Context } from '../App';
 import { useContext, useEffect, useState } from "react"
-import { Box, Button, Card, CardActions, CardContent, Typography } from "@mui/material";
+import { Box, Button, Card, CardActions, CardContent, CardMedia, Typography } from "@mui/material";
 import config from '../config'
 import { TimeSlot } from '../components/TimeSlot';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useNavigate } from 'react-router';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
+import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
+import EmailIcon from '@mui/icons-material/Email';
+import PersonIcon from '@mui/icons-material/Person';
 
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
 
@@ -81,47 +87,52 @@ const Member = () => {
       {user === null ? <><Typography variant='h6' align='center' sx={{ marginTop: '20px' }}>Loading...</Typography></>
         : <>
           <Box width={700} sx={{ marginTop: '20px' }}>
-            <Card sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginBottom: '20px', bgcolor: '#eeeeee', borderRadius: '20px', padding: '20px' }}>
-              <CardContent>
-                <Typography fontSize={150} sx={{ marginBottom: '-50px' }}><AccountCircle fontSize='inherit' /></Typography>
-                <Typography variant='h3'>{user ? user.first_name + " " + user.last_name : null}</Typography>
-                <Typography variant="h6">Crew Position: {crewPosition}</Typography>
-                <hr />
-                <Typography variant="h6">Account Info: </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                  <Typography><span style={{ fontWeight: 'bold' }}>Rank:</span> {user ? user.rank : null}</Typography>
-                  <Typography><span style={{ fontWeight: 'bold' }}>Role:</span> {user ? user.role : null}</Typography>
+            <Card sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginBottom: '20px', background: '#242526', borderRadius: '8px', paddingBottom: '20px' }}>
+              <CardMedia
+                sx={{ height: 400 }}
+                image="/satellite.jpg"
+              />
+              <CardContent sx={{marginTop: '-70px'}}>
+                <Box sx={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                  <Typography fontSize={150} sx={{marginRight: '10px'}}><AccountCircle fontSize='inherit'sx={{background: '#242526', borderRadius: '100px'}} /></Typography>
+                  <Box sx={{marginTop: '-25px'}}>
+                    <Typography variant='h4' fontWeight='bold'>{user ? user.first_name + " " + user.last_name : null}</Typography>
+                    <Typography variant="h6" sx={{color: '#e4e6eb', marginLeft: '-70px'}}>Crew Position: {crewPosition}</Typography>
+                  </Box>
                 </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                  <Typography><span style={{ fontWeight: 'bold' }}>Email:</span> {user ? user.email : null}</Typography>
-                  <Typography><span style={{ fontWeight: 'bold' }}>Phone Number:</span>{user ? user.phone_number : null}</Typography>
+                <Box sx={{background: '#3a3b3c', borderRadius: '8px', marginTop: '-50px', paddingY: '15px'}}>
+                  <Typography variant="h6">Account Info: </Typography>
+                  <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                    <Typography><span style={{ fontWeight: 'bold' }}><MilitaryTechIcon fontSize='inherit' sx={{marginRight: '5px', marginBottom: '-2px'}}/>Rank:</span> {user ? user.rank : null}</Typography>
+                    <Typography><span style={{ fontWeight: 'bold' }}><PersonIcon fontSize='inherit' sx={{marginRight: '5px', marginBottom: '-2px'}}/>Role:</span> {user ? user.role : null}</Typography>
+                  </Box>
+                  <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                    <Typography><span style={{ fontWeight: 'bold' }}><EmailIcon fontSize='inherit' sx={{marginRight: '5px', marginBottom: '-2px'}}/>Email:</span> {user ? user.email : null}</Typography>
+                    <Typography><span style={{ fontWeight: 'bold' }}><LocalPhoneIcon fontSize='inherit' sx={{marginRight: '5px', marginBottom: '-2px'}}/>Phone Number:</span>{user ? user.phone_number : null}</Typography>
+                  </Box>
                 </Box>
-                <hr />
               </CardContent>
-              <CardActions sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
-                <Button size="small" variant='contained' onClick={shiftOverview}>See Shift Overview</Button>
-                <Button size="small" variant='contained' onClick={calendar}>See Calendar</Button>
+              <CardActions sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                <Button size="large" variant='contained' onClick={shiftOverview} sx={{backgroundColor: '#1da1f2', color: 'white'}}><EqualizerIcon sx={{marginRight: '10px'}}/>See Shift Overview</Button>
+                <Button size="large" variant='contained' onClick={calendar} sx={{backgroundColor: '#1da1f2', color: 'white'}}><CalendarMonthIcon sx={{marginRight: '10px'}}/>See Calendar</Button>
               </CardActions>
             </Card>
           </Box>
-          <Box width={replacementTimeSlots.length > 0 ? 400 : 800}>
+          <Box width={340} sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
             <Typography variant='h4' fontWeight='bold' sx={{ marginBottom: '20px' }}>
               My Shifts
             </Typography>
-            <Box sx={replacementTimeSlots.length > 0 ? null : { display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+            <Box>
               {timeSlots.map(slot => <TimeSlot key={slot.id} slot={slot} toggleRefresh={toggleRefresh} />)}
             </Box>
-
-          </Box>
-          {replacementTimeSlots.length > 0 ?
-            (
-              <Box width={400}>
-                <Typography variant='h4' fontWeight='bold' sx={{ marginBottom: '20px' }}>
-                  Available Shifts
-                </Typography>
-                {replacementTimeSlots.map(slot => <TimeSlot key={slot.id} slot={slot} type={"replacement"} toggleRefresh={toggleRefresh} />)}
-              </Box>
-            ) : null}
+          </Box >
+            <Box width={340} sx={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+              <Typography variant='h4' fontWeight='bold' sx={{ marginBottom: '20px' }}>
+                Available Shifts
+              </Typography>
+              {replacementTimeSlots.map(slot => <TimeSlot key={slot.id} slot={slot} type={"replacement"} toggleRefresh={toggleRefresh} />)}
+            </Box>
+        
         </>}
     </div>
   )
