@@ -1,10 +1,14 @@
-import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
+import { Card, CardActionArea, CardContent, Typography, Container } from "@mui/material";
 import  { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { dateInfo, returnMemberDetail } from "../helpers";
 
 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+const cardStyle = {
+  bgcolor:"#929aab"
+}
 
 
 
@@ -17,10 +21,11 @@ const ReplacementShift = ({ replacementRequest, crewPositions, membersRequesting
 
 
   return(
-    <Card>
+    <Container>
+      <Card sx={cardStyle} elevation={6} >
       <CardActionArea onClick={(e) => setShift(replacementRequest)}>
       <CardContent >
-        <Typography>
+        <Typography >
           Shift Date: {dateInfo(replacementRequest.start_datetime)}
         </Typography>
         
@@ -39,6 +44,9 @@ const ReplacementShift = ({ replacementRequest, crewPositions, membersRequesting
       </CardActionArea>
       
     </Card>
+
+    </Container>
+    
 
   )
 

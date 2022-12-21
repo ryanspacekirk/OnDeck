@@ -1,4 +1,4 @@
-import { Button, Card, CardActionArea, CardActions, CardContent, CardHeader, Collapse, Stack, Typography } from "@mui/material";
+import { Button, Card, CardActionArea, CardActions, CardContent, CardHeader, Collapse, Stack, Typography, Container, Box } from "@mui/material";
 import  { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { dateInfo, returnMemberDetail } from "../helpers";
@@ -22,6 +22,10 @@ const ExpandMore = styled((props) => {
     duration: theme.transitions.duration.shortest,
   }),
 }));
+
+const cardStyle = {
+  bgcolor:"#929aab"
+}
 
 
 const ApprovalRequest = ({ leader, setMembers }) => {
@@ -87,7 +91,9 @@ const ApprovalRequest = ({ leader, setMembers }) => {
   }, []);
 
   return(
-    <Card>
+    <Container >
+      <Box>
+      <Card sx={cardStyle} elevation={6}>
       <CardActions disableSpacing>
         {leader.first_name} {leader.last_name}
         <ExpandMore
@@ -130,6 +136,12 @@ const ApprovalRequest = ({ leader, setMembers }) => {
       
       
     </Card>
+
+      </Box>
+      
+
+    </Container>
+    
 
   )
 
