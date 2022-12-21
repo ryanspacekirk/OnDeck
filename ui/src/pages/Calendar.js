@@ -1,12 +1,14 @@
 import config from '../config';
 import FullCalendar from "@fullcalendar/react";
 import daygridPlugin from "@fullcalendar/daygrid";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { Context } from '../App';
 
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
 
 export const Calendar = () => {
   const [events, setEvents] = useState([]);
+  const { user } = useContext(Context);
 
   useEffect(() => {
     const getTimeSlots = async () => {
@@ -25,7 +27,7 @@ export const Calendar = () => {
         resJson = resJson.map(slot => {
           return {
             id: slot.id,
-            title: "Regular Shift",
+            title: user.role === 'leader' ? `${slot.first_name} ${slot.last_name}'s Shift`: 'Regular Shift',
             start: new Date(slot.start_datetime),
             end: new Date(slot.end_datetime),
           }

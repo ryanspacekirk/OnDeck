@@ -221,7 +221,9 @@ app.get("/time_slots", validSession, async (req, res) => {
       res.status(200).send(time_slots);
     }
     else if(user.role === "leader") {
-      const time_slots = await knex('time_slots');
+      const time_slots = await knex('time_slots')
+                                .join('users', 'time_slots.user_id', 'users.id')
+                                .select('*', 'users.first_name', 'users.last_name')
       res.status(200).send(time_slots);
     } else {
       const time_slots = await knex('time_slots')
