@@ -65,8 +65,10 @@ const Member = () => {
         if (res.status !== 200) {
           alert(resJson);
         }
+        
+        let tempReplaceTimeSlots = resJson.filter(shift => shift.crew_position_id === user.crew_position_id);
 
-        setReplacementTimeSlots(resJson);
+        setReplacementTimeSlots(tempReplaceTimeSlots);
 
         res = await fetch(ApiUrl + `/crew_positions/${user.crew_position_id}`)
         resJson = await res.json();

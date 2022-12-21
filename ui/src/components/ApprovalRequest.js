@@ -93,7 +93,7 @@ const ApprovalRequest = ({ leader, setMembers }) => {
   return(
     <Container >
       <Box>
-      <Card sx={cardStyle} elevation={6}>
+      <Card  elevation={6}>
       <CardActions disableSpacing>
         {leader.first_name} {leader.last_name}
         <ExpandMore

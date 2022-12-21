@@ -3,7 +3,7 @@ import { Context } from '../App';
 import { useContext, useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import { Grid, Box, Button, Typography, Card } from "@mui/material";
-import axios, { all } from "axios";
+import axios from "axios";
 import BarChart from "../components/BarChart";
 import PieGraph from '../components/PieGraph';
 import config from '../config';
@@ -27,6 +27,7 @@ const Splash = () => {
     const [goodBoyData, setGoodBoyData] = useState([]);
     const [slackerData, setSlackerData] = useState([]);
 
+    // fetches information for bar graphes
     useEffect(() => {
         const getMembers = async () => {
             try {
@@ -49,8 +50,8 @@ const Splash = () => {
         getSwappedShifts();
     }, []);
 
+    // generates bar graph data
     useEffect(() => {
-
         if (memberList.length > 0 && adjustedShifts.length > 0) {
             const counts = {};
             let tempGoodBoyData = [];
@@ -75,7 +76,6 @@ const Splash = () => {
             }
             let keysSorted2 = Object.keys(counts2).sort(function (a, b) { return counts2[b] - counts2[a] });
             
-
             for (let i = 0; i < 5; i++) {
                 let memberId = keysSorted2[i]
 
@@ -85,7 +85,7 @@ const Splash = () => {
         }
     }, [memberList, adjustedShifts]);
 
-    //fetches for all information to be displayed
+    //fetches for piechart and donut chart information to be displayed
     useEffect(() => {
         const getTimeSlots = async () => {
             try {
@@ -116,7 +116,7 @@ const Splash = () => {
 
     }, [user])
 
-    //sets crew position data
+    //generates crew position donut chart data
     useEffect(() => {
         const counts = {};
         const donut = [];
@@ -129,7 +129,7 @@ const Splash = () => {
         setDonutData(donut)
     }, [crewPositions, positionData])
 
-    // sets shift data
+    // generates shift pie chart data
     useEffect(() => {
         setPieChartData([
             { type: 'Filled Shifts', area: timeSlots },
@@ -138,12 +138,14 @@ const Splash = () => {
         ])
     }, [timeSlots, replacementTimeSlots, pendingTimeSlots])
 
-    // makes return function wait until data has loaded
+    // return function WAITS until data has loaded
     function render() {
         return (
             pieChartData.length === 0 ||
             timeSlots + replacementTimeSlots + pendingTimeSlots === 0 ||
-            donutData.length === 0
+            donutData.length === 0 ||
+            memberList.length === 0 ||
+            adjustedShifts.length === 0
         )
     }
 
@@ -152,9 +154,9 @@ const Splash = () => {
             {render() ? <><Typography variant='h6' align='center' sx={{ marginTop: '20px' }}>Loading...</Typography></>
                 : <>
                     <Grid container justifyContent="space-between" direction="row" alignItems="baseline" sx={{ marginTop: '20px', marginBottom: '20px' }}>
-                        <Button size="small" variant='contained' sx={{ marginLeft: '40px' }} onClick={() => navigate('/member')}>Return to Profile</Button>
-                        <Typography variant='h4' fontWeight='bold'>Shift Overview</Typography>
-                        <Box sx={{ width: 200 }}></Box>
+                        {/* <Button size="small" variant='contained' sx={{ marginLeft: '40px' }} onClick={() => navigate('/member')}>Return to Profile</Button> */}
+                        <Typography variant='h4' fontWeight='bold' color="white">Shift Overview</Typography>
+                        {/* <Box sx={{ width: 200 }}></Box> */}
                     </Grid>
 
                     <Card sx={{ marginLeft: '40px', marginRight: '40px' }}>

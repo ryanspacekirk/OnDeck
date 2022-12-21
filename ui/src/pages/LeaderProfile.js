@@ -193,35 +193,35 @@ const LeaderProfile = () => {
 
   return (
       <div className='LeaderProfile'>
-        <Paper sx={{bgcolor:"#f7f7f7"}}>
+        <Paper >
         <Container>
           <Box>
           
           <Box>
             <Grid container spacing={2} mt={2}>
               <Grid item xs={4}>
-                <Card sx={cardStyle} elevation={4} > <Typography   variant='h6' align='center'> Total Commanders:</Typography> <Typography   variant='h4' align="center">{overviewData.numCommander}</Typography></Card>
+                <Card  elevation={4} > <Typography   variant='h6' align='center'> Total Commanders:</Typography> <Typography   variant='h4' align="center">{overviewData.numCommander}</Typography></Card>
               </Grid>
               <Grid item xs={4}>
-                <Card sx={cardStyle} elevation={4} > <Typography align='center' variant='h6'> Total SVOs:</Typography> <Typography align='center' variant='h4'>{overviewData.numSVO}</Typography></Card> 
+                <Card  elevation={4} > <Typography align='center' variant='h6'> Total SVOs:</Typography> <Typography align='center' variant='h4'>{overviewData.numSVO}</Typography></Card> 
               </Grid>
               <Grid item xs={4}>
-                <Card elevation={4} sx={cardStyle}> <Typography align='center' variant='h6'> Total GSOs:</Typography> <Typography align='center' variant='h4'>{overviewData.numGSO}</Typography></Card>
+                <Card elevation={4} > <Typography align='center' variant='h6'> Total GSOs:</Typography> <Typography align='center' variant='h4'>{overviewData.numGSO}</Typography></Card>
               </Grid>
               <Grid item xs={4}>
-                <Card elevation={6} sx={cardStyle}> <Typography  align='center' variant='h6'> Currently Available:</Typography> <Typography align='center' variant='h4'>{overviewData.numCommanderAvail}</Typography></Card>
+                <Card elevation={6} > <Typography  align='center' variant='h6'> Currently Available:</Typography> <Typography align='center' variant='h4'>{overviewData.numCommanderAvail}</Typography></Card>
               </Grid>
               <Grid item xs={4}>
-                <Card elevation={6} sx={cardStyle}> <Typography align='center' variant='h6'> Currently Available:</Typography> <Typography align='center' variant='h4'>{overviewData.numSVOAvail}</Typography></Card>
+                <Card elevation={6} > <Typography align='center' variant='h6'> Currently Available:</Typography> <Typography align='center' variant='h4'>{overviewData.numSVOAvail}</Typography></Card>
               </Grid>
               <Grid item xs={4}>
-                <Card elevation={6} sx={cardStyle}><Typography align='center' variant='h6'> Currently Available:</Typography> <Typography align='center' variant='h4'>{overviewData.numGSOAvail}</Typography></Card>
+                <Card elevation={6} ><Typography align='center' variant='h6'> Currently Available:</Typography> <Typography align='center' variant='h4'>{overviewData.numGSOAvail}</Typography></Card>
               </Grid>
             </Grid>
           </Box>
           <Grid container spacing={6} mt={2}>
             <Grid item xs={6} >
-              <Paper elevation={4} sx={{bgcolor:"#eeeeee"}}>
+              <Paper elevation={4} >
                 <Box><Typography variant='h4' align='center' sx={{color:"#21B68A"}} > Leadership Input Required</Typography></Box>
               
               <Box>
@@ -260,7 +260,7 @@ const LeaderProfile = () => {
 
                 {/* Right side of the display */}
               <Grid item xs={6}>
-                <Paper elevation={4} sx={{bgcolor:"#eeeeee"}}>
+                <Paper elevation={4} >
                 <Typography variant='h4' align='center'>Shifts Waiting to be Filled</Typography>
                 <Box pb={10}>
                 <Grid container spacing={2} mt={2}>
@@ -285,11 +285,11 @@ const LeaderProfile = () => {
             
 
         </Container>
-        <Stack direction="row"   spacing={60} mt={2}>
+        {/* <Stack direction="row"   spacing={60} mt={2}>
           <Button variant="outlined" onClick={(e) => {navigate('/calendar')}}>Calendar</Button>
           <Button variant="outlined" onClick={(e) => {navigate('/splash')}}>Overview</Button>
           <Button variant="outlined" onClick={(e) => {navigate('/alpha_roster')}}>Alpha Roster</Button>
-        </Stack>
+        </Stack> */}
 
         </Paper>
         
