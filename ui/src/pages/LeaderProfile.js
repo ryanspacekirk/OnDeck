@@ -1,7 +1,7 @@
 import { Button, Container, Typography } from '@mui/material';
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MenuItem, Select, Box, Grid, Item, Card, Paper } from "@mui/material";
+import { MenuItem, Select, Box, Grid, Item, Card, Paper, stack } from "@mui/material";
 import { Context } from '../App';
 import axios, { all } from "axios";
 import '../App.css';
@@ -12,7 +12,10 @@ import Blank from '../components/Blank';
 import ApprovalRequest from '../components/ApprovalRequest';
 import ApprovalRequestShift from '../components/ApprovalRequestShift';
 import config from '../config';
-import { Stack } from '@mui/system';
+
+
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
 
 
@@ -187,6 +190,7 @@ const LeaderProfile = () => {
       }
       getMembersNeedingReplacements();
       //memberCurrentlyAvailable(memberList[1]);
+      console.log("user", user);
 
     }, [shiftsNeedingReplacements]);
 
@@ -222,7 +226,7 @@ const LeaderProfile = () => {
           <Grid container spacing={6} mt={2}>
             <Grid item xs={6} >
               <Paper elevation={4} >
-                <Box><Typography variant='h4' align='center' sx={{color:"#21B68A"}} > Leadership Input Required</Typography></Box>
+                <Box><Typography variant='h4' align='center'  > Leadership Input Required</Typography></Box>
               
               <Box>
               <Grid container spacing={2} mt={2}>

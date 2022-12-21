@@ -19,7 +19,7 @@ const Splash = () => {
     const [crewPositions, setCrewPositions] = useState([]);
     const [positionData, setPositionData] = useState([]);
     const [donutData, setDonutData] = useState([]);
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     //ryan additions below this line
     const [memberList, setMemberList] = useState([]);
