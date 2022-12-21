@@ -97,7 +97,7 @@ else{
     <Box >
       <Container >
       
-      <Card sx={cardStyle} elevation={6}>
+      <Card  elevation={6}>
       <CardActions disableSpacing>
         {members[shift.user_id -1].first_name} {members[shift.user_id -1].last_name}
         <ExpandMore
