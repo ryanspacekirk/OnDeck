@@ -1,10 +1,10 @@
 
-import PieChart, { Series, Label, Connector, Size, Legend } from 'devextreme-react/pie-chart';
+import PieChart, { Series, Label, Connector, Size, Legend, Animation } from 'devextreme-react/pie-chart';
 
 // npm i devextreme
 // npm i devextreme-react 
 
-export default function PieGraph({ data , type, palette}) {
+export default function PieGraph({ data, type, palette }) {
 
     // function pointClickHandler(e) {
     //     toggleVisibility(e.target);
@@ -27,8 +27,8 @@ export default function PieGraph({ data , type, palette}) {
             palette={palette}
             type={type}
             title=""
-            // onPointClick={pointClickHandler}
-            // onLegendClick={legendClickHandler}
+        // onPointClick={pointClickHandler}
+        // onLegendClick={legendClickHandler}
         >
             <Series
                 argumentField="type"
@@ -39,10 +39,16 @@ export default function PieGraph({ data , type, palette}) {
                 </Label>
             </Series>
 
-            <Size width={500} height={400}/>
-            <Legend 
+            <Size width={500} height={400} />
+            <Legend
                 horizontalAlignment="right"
                 verticalAlignment="top"
+            />
+
+            <Animation
+                easing="easeOutCubic"
+                duration={750}
+                maxPointCountSupported={1000}
             />
         </PieChart>
     );

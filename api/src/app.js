@@ -236,6 +236,16 @@ app.get("/time_slots", validSession, async (req, res) => {
   }
 })
 
+app.get("/time_slots_splash", validSession, async (req, res) => {
+  try {
+    const time_slots = await knex('time_slots');
+      res.status(200).send(time_slots.map(slot => slot.type));
+  } catch(err) {
+    console.log(err);
+    res.status(500).json(err.message);
+  }
+})
+
 /* GET time_slots: if role is leader, returns all timeslots for the specified user.  */
 
 app.get("/time_slotsbyid", validSession, async (req, res) => {

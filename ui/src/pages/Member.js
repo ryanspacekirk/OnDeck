@@ -33,7 +33,7 @@ const Member = () => {
     if (user !== null) {
       if (user.role === 'leader') navigate('/leader')
     }
-  }, [user])
+  }, [user, navigate])
 
   useEffect(() => {
     const getTimeSlots = async () => {

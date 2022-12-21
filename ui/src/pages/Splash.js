@@ -20,25 +20,20 @@ const Splash = () => {
     const [donutData, setDonutData] = useState([]);
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     if (user === null) navigate('/accessDenied')
-    //   }, [user])
-
     //fetches for all information to be displayed
-    useEffect(() => {   
+    useEffect(() => {
         const getTimeSlots = async () => {
             try {
-                let res = await fetch(ApiUrl + '/time_slots', { credentials: 'include' });
+                let res = await fetch(ApiUrl + '/time_slots_splash', { credentials: 'include' });
                 let resJson = await res.json();
                 if (res.status !== 200) alert(resJson);
-                console.log('shifts',resJson)
-                setTimeSlots(resJson.filter(slot => slot.type === 'shift'));
-                setPendingTimeSlots(resJson.filter(slot => slot.type === 'pending_replacement'));
-
-                res = await fetch(ApiUrl + '/time_slots?need_replacement=true', { credentials: 'include' });
-                resJson = await res.json();
-                if (res.status !== 200) alert(resJson);
-                setReplacementTimeSlots(resJson);
+                const shiftCount = {};
+                for (const shift of resJson) {
+                    shiftCount[shift] = shiftCount[shift] ? shiftCount[shift] + 1 : 1
+                }
+                setTimeSlots(shiftCount.shift);
+                setPendingTimeSlots(shiftCount.pending_replacement);
+                setReplacementTimeSlots(shiftCount.replacement_needed);
 
                 res = await fetch(ApiUrl + '/crew_positions', { credentials: 'include' });
                 resJson = await res.json();
@@ -90,9 +85,9 @@ const Splash = () => {
     // sets shift data
     useEffect(() => {
         setPieChartData([
-            { type: 'Filled Shifts', area: timeSlots.length },
-            { type: 'Replacement Needed', area: replacementTimeSlots.length },
-            { type: 'Drop Request Pending', area: pendingTimeSlots.length },
+            { type: 'Filled Shifts', area: timeSlots },
+            { type: 'Replacement Needed', area: replacementTimeSlots },
+            { type: 'Drop Request Pending', area: pendingTimeSlots },
         ])
     }, [timeSlots, replacementTimeSlots, pendingTimeSlots])
 
@@ -100,7 +95,7 @@ const Splash = () => {
     function render() {
         return (
             pieChartData.length === 0 ||
-            timeSlots.length + replacementTimeSlots.length + pendingTimeSlots === 0 ||
+            timeSlots + replacementTimeSlots + pendingTimeSlots === 0 ||
             donutData.length === 0
         )
     }
@@ -118,10 +113,10 @@ const Splash = () => {
                     <Card sx={{ marginLeft: '40px', marginRight: '40px' }}>
                         <Grid container direction="row" justifyContent="space-evenly" sx={{ marginTop: '20px' }}>
                             <Grid item xl={5} lg={5} md={7} sm={9}>
-                                <PieGraph data={pieChartData} type={"pie"} palette={["#73d47f", "#fb7764", "#fed85e"]}/>
+                                <PieGraph data={pieChartData} type={"pie"} palette={["#73d47f", "#fb7764", "#fed85e"]} />
                             </Grid>
                             <Grid item xl={5} lg={5} md={7} sm={9}>
-                                <PieGraph data={donutData} type={"donut"} palette={"office"}/>
+                                <PieGraph data={donutData} type={"donut"} palette={"office"} />
                             </Grid>
                         </Grid>
 
