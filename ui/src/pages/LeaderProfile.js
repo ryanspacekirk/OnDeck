@@ -174,7 +174,7 @@ const LeaderProfile = () => {
                 <Card> <Typography display="inline" variant='h6'> Currently Available:</Typography> <Typography display="inline" variant='h4'>{overviewData.numSVOAvail}</Typography></Card>
               </Grid>
               <Grid item xs={4}>
-                <Card><Typography display="inline" variant='h6'> Currently Available:</Typography> <Typography display="inline" variant='h4'>{overviewData.numSVO}</Typography></Card>
+                <Card><Typography display="inline" variant='h6'> Currently Available:</Typography> <Typography display="inline" variant='h4'>{overviewData.numGSOAvail}</Typography></Card>
               </Grid>
             </Grid>
           </Box>
