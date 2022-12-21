@@ -1,7 +1,7 @@
 import { Button, Container, Typography } from '@mui/material';
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { MenuItem, Select, Box, Grid, Item, Card } from "@mui/material";
+import { MenuItem, Select, Box, Grid, Item, Card, Paper } from "@mui/material";
 import { Context } from '../App';
 import axios, { all } from "axios";
 import '../App.css';
@@ -14,6 +14,31 @@ import ApprovalRequestShift from '../components/ApprovalRequestShift';
 import config from '../config';
 import { Stack } from '@mui/system';
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
+
+
+
+const themeColors = {
+  background:"#f7f7f7",
+  cardsOffBackground: "#eeeeee",
+  darkContrast: "#393e46",
+  lightDarkContrast:"#929aab"
+
+}
+
+const buttonStyle = {
+  val:1,
+
+};
+
+const paperStyled = {
+  bgcolor: "#f7f7f7"
+
+  
+}
+
+const cardStyle = {
+  bgcolor:"#929aab"
+}
 
 
 
@@ -124,7 +149,7 @@ const LeaderProfile = () => {
     else {
       setShowFindReplacement(false);
     }
-    console.log("Adjusted shifts:", adjustedShifts);
+    
 
 
 
@@ -168,45 +193,53 @@ const LeaderProfile = () => {
 
   return (
       <div className='LeaderProfile'>
+        <Paper sx={{bgcolor:"#f7f7f7"}}>
         <Container>
           <Box>
           
           <Box>
             <Grid container spacing={2} mt={2}>
               <Grid item xs={4}>
-                <Card> <Typography display="inline" variant='h6'> Total Commanders:</Typography> <Typography display="inline" variant='h4'>{overviewData.numCommander}</Typography></Card>
+                <Card sx={cardStyle} elevation={4} > <Typography   variant='h6' align='center'> Total Commanders:</Typography> <Typography   variant='h4' align="center">{overviewData.numCommander}</Typography></Card>
               </Grid>
               <Grid item xs={4}>
-                <Card> <Typography display="inline" variant='h6'> Total SVOs:</Typography> <Typography display="inline" variant='h4'>{overviewData.numSVO}</Typography></Card> 
+                <Card sx={cardStyle} elevation={4} > <Typography align='center' variant='h6'> Total SVOs:</Typography> <Typography align='center' variant='h4'>{overviewData.numSVO}</Typography></Card> 
               </Grid>
               <Grid item xs={4}>
-                <Card> <Typography display="inline" variant='h6'> Total GSOs:</Typography> <Typography display="inline" variant='h4'>{overviewData.numGSO}</Typography></Card>
+                <Card elevation={4} sx={cardStyle}> <Typography align='center' variant='h6'> Total GSOs:</Typography> <Typography align='center' variant='h4'>{overviewData.numGSO}</Typography></Card>
               </Grid>
               <Grid item xs={4}>
-                <Card> <Typography display="inline" variant='h6'> Currently Available:</Typography> <Typography display="inline" variant='h4'>{overviewData.numCommanderAvail}</Typography></Card>
+                <Card elevation={6} sx={cardStyle}> <Typography  align='center' variant='h6'> Currently Available:</Typography> <Typography align='center' variant='h4'>{overviewData.numCommanderAvail}</Typography></Card>
               </Grid>
               <Grid item xs={4}>
-                <Card> <Typography display="inline" variant='h6'> Currently Available:</Typography> <Typography display="inline" variant='h4'>{overviewData.numSVOAvail}</Typography></Card>
+                <Card elevation={6} sx={cardStyle}> <Typography align='center' variant='h6'> Currently Available:</Typography> <Typography align='center' variant='h4'>{overviewData.numSVOAvail}</Typography></Card>
               </Grid>
               <Grid item xs={4}>
-                <Card><Typography display="inline" variant='h6'> Currently Available:</Typography> <Typography display="inline" variant='h4'>{overviewData.numGSOAvail}</Typography></Card>
+                <Card elevation={6} sx={cardStyle}><Typography align='center' variant='h6'> Currently Available:</Typography> <Typography align='center' variant='h4'>{overviewData.numGSOAvail}</Typography></Card>
               </Grid>
             </Grid>
           </Box>
           <Grid container spacing={6} mt={2}>
             <Grid item xs={6} >
-              <Typography variant='h4'> Leadership Input Required</Typography>
+              <Paper elevation={4} sx={{bgcolor:"#eeeeee"}}>
+                <Box><Typography variant='h4' align='center' > Leadership Input Required</Typography></Box>
               
+              <Box>
               <Grid container spacing={2} mt={2}>
                 {leadersPending.map((leader) => {
                   return(
                     <Grid item xs={6}>
-                      <ApprovalRequest key={leader} leader={leader} setMembers={setMemberList}/>
+                      <ApprovalRequest  key={leader} leader={leader} setMembers={setMemberList}/>
                     </Grid>
                   );
                 })}
                 
               </Grid>
+
+
+              </Box>
+              
+              <Box pb={10}>
               <Grid container spacing={2} mt={2}>
                 {approvalsPending.map((shift) => {
                   return(
@@ -217,12 +250,20 @@ const LeaderProfile = () => {
                 })}
                 
               </Grid>
+
+              </Box>
+              
+
+              </Paper>
+              
               </Grid>
 
                 {/* Right side of the display */}
               <Grid item xs={6}>
-                <Typography variant='h4'>Shifts Waiting to be Filled</Typography>
-              <Grid container spacing={2} mt={2}>
+                <Paper elevation={4} sx={{bgcolor:"#eeeeee"}}>
+                <Typography variant='h4' align='center'>Shifts Waiting to be Filled</Typography>
+                <Box pb={10}>
+                <Grid container spacing={2} mt={2}>
                 {shiftsNeedingReplacements.map(shift => {
                   return(
                     <Grid item xs={6} >
@@ -231,6 +272,12 @@ const LeaderProfile = () => {
                   )
                 })} 
             </Grid>
+
+                </Box>
+              
+
+                </Paper>
+                
             </Grid>
           </Grid>          
           </Box>
@@ -238,11 +285,14 @@ const LeaderProfile = () => {
             
 
         </Container>
-        <Stack direction="row" mt={6}>
-          <Button onClick={(e) => {navigate('/calendar')}}>Calendar</Button>
-          <Button onClick={(e) => {navigate('/splash')}}>Overview</Button>
-          <Button onClick={(e) => {navigate('/alpha_roster')}}>Alpha Roster</Button>
+        <Stack direction="row"   spacing={60} mt={2}>
+          <Button variant="outlined" onClick={(e) => {navigate('/calendar')}}>Calendar</Button>
+          <Button variant="outlined" onClick={(e) => {navigate('/splash')}}>Overview</Button>
+          <Button variant="outlined" onClick={(e) => {navigate('/alpha_roster')}}>Alpha Roster</Button>
         </Stack>
+
+        </Paper>
+        
 
 
         </div>

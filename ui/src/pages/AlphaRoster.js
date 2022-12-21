@@ -60,7 +60,7 @@ const AlphaRoster = () => {
       }
     }
     getMembers();
-    console.log('Member List', memberList);
+    
 
   },[]);
 
@@ -68,7 +68,7 @@ const AlphaRoster = () => {
 
   useEffect(()=>{
     rows = memberList;
-    console.log('Member List', memberList);
+    
     rows = memberList;
 
     makeGridList();
@@ -97,8 +97,7 @@ const AlphaRoster = () => {
       
       
       
-      <p>Alpha Roster</p>
-      <Typography>Test</Typography>
+      
 
       
 

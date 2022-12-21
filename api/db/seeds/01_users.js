@@ -105,6 +105,17 @@ exports.seed = async function(knex) {
     // { first_name: '', last_name: '', email: '', phone_number: '', role:'', rank: '', username: '', passwordHash: '', crew_position_id: '', created_at:knex.fn.now() , updated_at:knex.fn.now()  },
     
     //Leadership
+    {
+      first_name: 'Patrick',
+      last_name: 'Gaynor',
+      email: 'butters@yahoo.com',
+      phone_number: '123-867-5309',
+      role:'leader',
+      rank: 'O5',
+      username: 'butters',
+      passwordHash: await passwordGenerator(),
+      crew_position_id: crew_position_ids[0]
+    },
     await createMember(0, 0),
     await createMember(0, 0),
 
