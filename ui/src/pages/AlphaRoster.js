@@ -1,5 +1,5 @@
 import { DataGrid } from '@mui/x-data-grid';
-import { Button, Card, Container, Typography } from '@mui/material';
+import { Button, Card, Container, Typography, Box } from '@mui/material';
 import { useContext, useEffect, useState } from "react";
 import config from '../config';
 import axios, { all } from "axios";
@@ -80,7 +80,8 @@ const AlphaRoster = () => {
     
     <div className="AlphaRoster" >
       <Container>
-      <div className='ROSTERDIV' style={{height:800 }}>
+        <Box mt={4}>
+        <div className='ROSTERDIV' style={{height:800 }}>
       <DataGrid
           columns={columns}
           rows={gridList}
@@ -92,6 +93,9 @@ const AlphaRoster = () => {
             </DataGrid>
 
       </div>
+
+        </Box>
+      
 
       </Container>
       

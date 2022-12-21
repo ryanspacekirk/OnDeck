@@ -151,9 +151,9 @@ const Splash = () => {
 
     return (
         <div className='Splash' >
-            {render() ? <><Typography variant='h6' align='center' sx={{ marginTop: '20px' }}>Loading...</Typography></>
+            {render() ? <><Typography variant='h6' align='center' sx={{ marginTop: '20px', fontWeight:"bold" }}>Loading...</Typography></>
                 : <>
-                    <Grid container justifyContent="space-between" direction="row" alignItems="baseline" sx={{ marginTop: '20px', marginBottom: '20px' }}>
+                    <Grid container justifyContent="space-between" direction="row" alignItems="baseline" sx={{ marginTop: '20px', marginBottom: '20px', fontWeight:"bold", color:"white" }}>
                         {/* <Button size="small" variant='contained' sx={{ marginLeft: '40px' }} onClick={() => navigate('/member')}>Return to Profile</Button> */}
                         <Typography variant='h4' fontWeight='bold' color="white">Shift Overview</Typography>
                         {/* <Box sx={{ width: 200 }}></Box> */}

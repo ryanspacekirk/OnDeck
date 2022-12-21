@@ -1,4 +1,4 @@
-import { Button, Card, CardActionArea, CardActions, CardContent, CardHeader, Collapse, Stack, Typography, Container, Box } from "@mui/material";
+import { Button, Card, CardActionArea, CardActions, CardContent, CardHeader, Collapse, Stack, Typography, Container, Box, Grid } from "@mui/material";
 import  { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { dateInfo, returnMemberDetail, matchMember } from "../helpers";
@@ -6,6 +6,8 @@ import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Blank from "./Blank";
+
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
 
 import config from '../config';
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
@@ -97,9 +99,20 @@ else{
     <Box >
       <Container >
       
-      <Card  elevation={6}>
+      <Card  elevation={6} sx={{borderRadius:"8px"}}>
       <CardActions disableSpacing>
-        {members[shift.user_id -1].first_name} {members[shift.user_id -1].last_name}
+      <Grid container direction="row" alignItems="center">
+            <Grid item>
+            <PendingActionsIcon/>
+            </Grid>
+            <Grid item>
+            <Typography  ml={1}>
+            {members[shift.user_id -1].first_name} {members[shift.user_id -1].last_name}
+          </Typography>
+  
+            </Grid>
+          </Grid>
+        
         <ExpandMore
           expand={expanded}
           onClick={handleExpandClick}

@@ -4,7 +4,7 @@ import config from './config';
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
 
 const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
-const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "DEC"];
 const dayMili = 86400000;
 export const dateInfo = (isoDate) => {
   let returnInfo;
@@ -39,7 +39,7 @@ export const returnMemberDetail = (memberID, memberList) => {
 }
 
 export const memberString = (member) => {
-  return(member.last_name + ', ' + member.first_name + ` (${member.rank})` );
+  return( member.last_name + ', ' + member.first_name + ` (${member.rank})` );
 }
 
 export const doubleFilter = async(members, shifts) => {
@@ -322,5 +322,13 @@ export const inspector = (adjustments, setter, member) =>{
 
   })
   setter(returnVal);
+
+}
+
+export const shirnkEmail = (email) => {
+  let returnString = "";
+  let indexofAt = email.indexOf('@');
+  returnString = email.slice(0, indexofAt);
+  return returnString;
 
 }

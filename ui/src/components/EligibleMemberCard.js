@@ -1,4 +1,4 @@
-import { Button, Card, CardActionArea, CardActions, CardContent, CardHeader, Collapse, Typography, Alert } from "@mui/material";
+import { Button, Card, CardActionArea, CardActions, CardContent, CardHeader, Collapse, Typography, Alert, Grid } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
 import { memberString, dateInfo, timeInfo, shiftHelper, inspector } from "../helpers";
@@ -6,6 +6,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { useEffect, useState } from "react";
 import config from "../config";
 import Blank from "./Blank";
+
+import PersonIcon from '@mui/icons-material/Person';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
 
 
@@ -66,58 +70,207 @@ const EligibleMemberCard = ({ member, replacementShift, allShifts, adjusted }) =
     inspector(adjusted, setAdjustedVals, member);
   }, [])
 
-  return(
-    <div className="EligibleMemberCard">
-      <Card>
-        
-
-        <CardActions disableSpacing>
-        {memberString(member)}
-          <ExpandMore 
-            expand={expanded}
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
-            aria-label="show more"
-          >
-            <ExpandMoreIcon />
-          </ExpandMore>
+  if(adjustedVals.picked - adjustedVals.dropped > 0){
+    return(
+      <div className="EligibleMemberCard">
+        <Card sx={{borderRadius:"8px"}}>
           
+  
+          <CardActions disableSpacing>
+          <Grid container direction="row" alignItems="center">
+            <Grid item>
+            <PersonAddIcon/>
+            </Grid>
+            <Grid item>
+            <Typography  ml={2}>
+            {memberString(member)}
+          </Typography>
+  
+            </Grid>
+          </Grid>
           
-
-        </CardActions>
-
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <CardContent>
-          <Typography mt={1}>
-              Phone Number: {member.phone_number}
-            </Typography>
-            <Typography mt={1}>
-              Last Shift: {dateInfo(shiftHelper(member, allShifts).last)}
-              {/* Last Shift: {shiftHelper(member, allShifts).last} */}
-            </Typography>
-
-            <Typography mt={1}>
-            Next Shift: {dateInfo(shiftHelper(member, allShifts).next)}
-            </Typography>
-
-            <Typography mt={1}>
-              Number of shifts dropped: {adjustedVals.dropped}
-            </Typography>
-
-            <Typography mt={1} mb={1}>
-              Number of shifts picked up: {adjustedVals.picked}
-            </Typography>
+            <ExpandMore 
+              expand={expanded}
+              onClick={handleExpandClick}
+              aria-expanded={expanded}
+              aria-label="show more"
+            >
+              <ExpandMoreIcon />
+            </ExpandMore>
             
-            <Button onClick={handleReassign} variant="contained" >Assign to Shift</Button>
-          </CardContent>
+            
+  
+          </CardActions>
+  
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <CardContent>
+            <Typography mt={1}>
+                Phone Number: {member.phone_number}
+              </Typography>
+              <Typography mt={1}>
+                Last Shift: {dateInfo(shiftHelper(member, allShifts).last)}
+                {/* Last Shift: {shiftHelper(member, allShifts).last} */}
+              </Typography>
+  
+              <Typography mt={1}>
+              Next Shift: {dateInfo(shiftHelper(member, allShifts).next)}
+              </Typography>
+  
+              <Typography mt={1}>
+                Number of shifts dropped: {adjustedVals.dropped}
+              </Typography>
+  
+              <Typography mt={1} mb={1}>
+                Number of shifts picked up: {adjustedVals.picked}
+              </Typography>
+              
+              <Button onClick={handleReassign} variant="contained" >Assign to Shift</Button>
+            </CardContent>
+  
+          {succesSwap ? <Alert severity="success"> Shift Swapped</Alert> : <Blank />}
+          </Collapse>
+  
+        
+        </Card>
+      </div>
+    )
 
-        {succesSwap ? <Alert severity="success"> Shift Swapped</Alert> : <Blank />}
-        </Collapse>
+  }
+  else if(adjustedVals.picked - adjustedVals.dropped === 0 ){
 
-      
-      </Card>
-    </div>
-  )
+    return(
+      <div className="EligibleMemberCard">
+        <Card sx={{borderRadius:"8px"}}>
+          
+  
+          <CardActions disableSpacing>
+          <Grid container direction="row" alignItems="center">
+            <Grid item>
+            <PersonIcon/>
+            </Grid>
+            <Grid item>
+            <Typography  ml={2}>
+            {memberString(member)}
+          </Typography>
+  
+            </Grid>
+          </Grid>
+          
+            <ExpandMore 
+              expand={expanded}
+              onClick={handleExpandClick}
+              aria-expanded={expanded}
+              aria-label="show more"
+            >
+              <ExpandMoreIcon />
+            </ExpandMore>
+            
+            
+  
+          </CardActions>
+  
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <CardContent>
+            <Typography mt={1}>
+                Phone Number: {member.phone_number}
+              </Typography>
+              <Typography mt={1}>
+                Last Shift: {dateInfo(shiftHelper(member, allShifts).last)}
+                {/* Last Shift: {shiftHelper(member, allShifts).last} */}
+              </Typography>
+  
+              <Typography mt={1}>
+              Next Shift: {dateInfo(shiftHelper(member, allShifts).next)}
+              </Typography>
+  
+              <Typography mt={1}>
+                Number of shifts dropped: {adjustedVals.dropped}
+              </Typography>
+  
+              <Typography mt={1} mb={1}>
+                Number of shifts picked up: {adjustedVals.picked}
+              </Typography>
+              
+              <Button onClick={handleReassign} variant="contained" >Assign to Shift</Button>
+            </CardContent>
+  
+          {succesSwap ? <Alert severity="success"> Shift Swapped</Alert> : <Blank />}
+          </Collapse>
+  
+        
+        </Card>
+      </div>
+    )
+
+
+  }
+  else {
+    return(
+      <div className="EligibleMemberCard">
+        <Card sx={{borderRadius:"8px"}}>
+          
+  
+          <CardActions disableSpacing>
+          <Grid container direction="row" alignItems="center">
+            <Grid item>
+            <PersonRemoveIcon/>
+            </Grid>
+            <Grid item>
+            <Typography  ml={2}>
+            {memberString(member)}
+          </Typography>
+  
+            </Grid>
+          </Grid>
+          
+            <ExpandMore 
+              expand={expanded}
+              onClick={handleExpandClick}
+              aria-expanded={expanded}
+              aria-label="show more"
+            >
+              <ExpandMoreIcon />
+            </ExpandMore>
+            
+            
+  
+          </CardActions>
+  
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <CardContent>
+            <Typography mt={1}>
+                Phone Number: {member.phone_number}
+              </Typography>
+              <Typography mt={1}>
+                Last Shift: {dateInfo(shiftHelper(member, allShifts).last)}
+                {/* Last Shift: {shiftHelper(member, allShifts).last} */}
+              </Typography>
+  
+              <Typography mt={1}>
+              Next Shift: {dateInfo(shiftHelper(member, allShifts).next)}
+              </Typography>
+  
+              <Typography mt={1}>
+                Number of shifts dropped: {adjustedVals.dropped}
+              </Typography>
+  
+              <Typography mt={1} mb={1}>
+                Number of shifts picked up: {adjustedVals.picked}
+              </Typography>
+              
+              <Button onClick={handleReassign} variant="contained" >Assign to Shift</Button>
+            </CardContent>
+  
+          {succesSwap ? <Alert severity="success"> Shift Swapped</Alert> : <Blank />}
+          </Collapse>
+  
+        
+        </Card>
+      </div>
+    )
+
+  }
+  
   
 
 
