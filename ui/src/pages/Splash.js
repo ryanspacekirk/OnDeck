@@ -3,6 +3,7 @@ import { Context } from '../App';
 import { useContext, useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 import { Grid, Box, Button, Typography, Card } from "@mui/material";
+import axios, { all } from "axios";
 import BarChart from "../components/BarChart";
 import PieGraph from '../components/PieGraph';
 import config from '../config';
@@ -19,6 +20,70 @@ const Splash = () => {
     const [positionData, setPositionData] = useState([]);
     const [donutData, setDonutData] = useState([]);
     const navigate = useNavigate();
+
+    //ryan additions below this line
+    const [memberList, setMemberList] = useState([]);
+    const [adjustedShifts, setAdjustedShifts] = useState([]);
+    const [goodBoyData, setGoodBoyData] = useState([]);
+    const [slackerData, setSlackerData] = useState([]);
+
+    useEffect(() => {
+        const getMembers = async () => {
+            try {
+                let res = await axios.get(ApiUrl + '/users?member', { withCredentials: true });
+                setMemberList(res.data);
+            } catch (e) {
+                console.log('Error finding members  in Splash:', e);
+            }
+        }
+        getMembers();
+
+        const getSwappedShifts = async () => {
+            try {
+                let res = await axios.get(ApiUrl + '/adjusted_shifts', { withCredentials: true });
+                setAdjustedShifts(res.data);
+            } catch (e) {
+                console.log('Error finding swapped shifts  in LeaderProfile:', e);
+            }
+        }
+        getSwappedShifts();
+    }, []);
+
+    useEffect(() => {
+
+        if (memberList.length > 0 && adjustedShifts.length > 0) {
+            const counts = {};
+            let tempGoodBoyData = [];
+
+            for (const shift of adjustedShifts) {
+                counts[shift.added_member_id] = counts[shift.added_member_id] ? counts[shift.added_member_id] + 1 : 1;
+            }
+            let keysSorted = Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a] });
+
+            for (let i = 0; i < 5; i++) {
+                let memberId = keysSorted[i]
+
+                tempGoodBoyData.push({ name: memberList[parseInt(memberId) - 1].first_name, status: counts[memberId] });
+            }
+            setGoodBoyData(tempGoodBoyData);
+
+            const counts2 = {};
+            let tempSlackerData = [];
+
+            for (const shift of adjustedShifts) {
+                counts2[shift.removed_member_id] = counts2[shift.removed_member_id] ? counts2[shift.removed_member_id] + 1 : 1;
+            }
+            let keysSorted2 = Object.keys(counts2).sort(function (a, b) { return counts2[b] - counts2[a] });
+            
+
+            for (let i = 0; i < 5; i++) {
+                let memberId = keysSorted2[i]
+
+                tempSlackerData.push({ name: memberList[parseInt(memberId) - 1].first_name, status: counts2[memberId] });
+            }
+            setSlackerData(tempSlackerData);
+        }
+    }, [memberList, adjustedShifts]);
 
     //fetches for all information to be displayed
     useEffect(() => {
@@ -59,28 +124,10 @@ const Splash = () => {
             counts[user.crew_position_id] = counts[user.crew_position_id] ? counts[user.crew_position_id] + 1 : 1;
         }
         for (const position of crewPositions) {
-            donut.push({ type: position.description, area: position.id })
+            donut.push({ type: position.description, area: counts[position.id] })
         }
         setDonutData(donut)
     }, [crewPositions, positionData])
-
-    const goodBoyData = [
-        { name: "Spc1 Timmy", status: 6 },
-        { name: "2d Lt Jackson", status: 5 },
-        { name: "Spc2 Tommy", status: 4 },
-        { name: "1st Lt Johnson", status: 4 },
-        { name: "Spc3 Johnny", status: 3 },
-        { name: "SSgt Sally", status: 3 },
-    ];
-
-    const slackerData = [
-        { name: "Spc1 Timmy", status: 4 },
-        { name: "2d Lt Jackson", status: 3 },
-        { name: "Spc2 Tommy", status: 3 },
-        { name: "1st Lt Johnson", status: 2 },
-        { name: "Spc3 Johnny", status: 2 },
-        { name: "SSgt Sally", status: 1 },
-    ];
 
     // sets shift data
     useEffect(() => {

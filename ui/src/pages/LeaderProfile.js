@@ -222,7 +222,7 @@ const LeaderProfile = () => {
           <Grid container spacing={6} mt={2}>
             <Grid item xs={6} >
               <Paper elevation={4} sx={{bgcolor:"#eeeeee"}}>
-                <Box><Typography variant='h4' align='center' > Leadership Input Required</Typography></Box>
+                <Box><Typography variant='h4' align='center' sx={{color:"#21B68A"}} > Leadership Input Required</Typography></Box>
               
               <Box>
               <Grid container spacing={2} mt={2}>
