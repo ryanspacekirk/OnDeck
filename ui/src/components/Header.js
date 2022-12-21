@@ -49,7 +49,7 @@ const Header = () => {
     navigate('/');
   }
 
-  if(user.role === "leader"){
+  if(user && user.role==="leader"){
     return (
       <Box>
         <Box>
