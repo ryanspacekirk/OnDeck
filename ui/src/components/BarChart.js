@@ -1,4 +1,4 @@
-import { Chart, Series, Size, Legend , ValueAxis, Animation, Border} from 'devextreme-react/chart';
+import { Chart, Series, Size, Legend , ValueAxis, Animation } from 'devextreme-react/chart';
 
 // npm i devextreme
 // npm i devextreme-react 
@@ -25,12 +25,6 @@ export default function BarChart({ data, name, color, width }) {
                 easing="easeOutCubic"
                 duration={750}
                 maxPointCountSupported={1000}
-            />
-
-            <Border 
-                visible={true}
-                color="#000000"
-                width={5}
             />
         </Chart>
     );
