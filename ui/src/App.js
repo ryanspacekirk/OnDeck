@@ -11,30 +11,39 @@ import AlphaRoster from './pages/AlphaRoster';
 import './App.css'
 import { Pending } from './pages/Pending';
 import Redirect from './components/Redirect';
-// import config from './config'
-// const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
 
 function App() {
   let [user, setUser] = useState(null);
 
   return (
     <div className='App'>
-      <Context.Provider value={{ user, setUser }}>
-        <BrowserRouter>
-          <Header />
-          <Redirect />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/member" element={<Member />} />
-            <Route path="/leader" element={<LeaderProfile />} />
-            <Route path="/splash" element={<Splash />} />
-            <Route path="/calendar" element={<Calendar />} />
-            <Route path="/pending" element={<Pending />} />
-            <Route path="/accessDenied" element={<UnauthorizedAccess />} />
-            <Route path="/alpha_roster" element={<AlphaRoster />} />
-          </Routes>
-        </BrowserRouter>
-      </Context.Provider>
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <Context.Provider value={{ user, setUser }}>
+          <BrowserRouter>
+            <Header />
+            <Redirect />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/member" element={<Member />} />
+              <Route path="/leader" element={<LeaderProfile />} />
+              <Route path="/splash" element={<Splash />} />
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/pending" element={<Pending />} />
+              <Route path="/accessDenied" element={<UnauthorizedAccess />} />
+              <Route path="/alpha_roster" element={<AlphaRoster />} />
+            </Routes>
+          </BrowserRouter>
+        </Context.Provider>
+      </ThemeProvider>
     </div>
   );
 }

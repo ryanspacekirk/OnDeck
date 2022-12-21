@@ -2,6 +2,8 @@ import { Box, Button, Card, CardActions, CardContent, Typography } from '@mui/ma
 import React, { useContext } from 'react'
 import { Context } from '../App';
 import config from '../config'
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
 const ApiUrl = config[process.env.REACT_APP_NODE_ENV || "development"].apiUrl;
 
 export const TimeSlot = ({ slot, type, toggleRefresh }) => {
@@ -62,9 +64,10 @@ export const TimeSlot = ({ slot, type, toggleRefresh }) => {
   }
 
   return (
-    <Card sx={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginBottom: '30px', bgcolor: '#eeeeee', borderRadius: '5px',  padding: '20px', width: '340px'}}>
+    <Card sx={{display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginBottom: '30px', background: type === 'replacement' ? '#3a3b3c' : '#242526', borderRadius: '8px',  paddingLeft: '20px', paddingRight: '20px', width: '340px'}}>
       <CardContent>
-        <Typography variant="h6" sx={{marginBottom: '20px'}} fontWeight='bold'>{start.toDateString().slice(4, 10)}: {start.toTimeString().slice(0,5)} - {end.toTimeString().slice(0,5)}</Typography>
+        <Typography variant="h5" fontWeight='bold'><CalendarMonthIcon fontSize='inherit' sx={{marginBottom: '-2px', marginRight: '2px'}}/>{start.toDateString().slice(4, 15)}</Typography>
+        <Typography variant="h6" sx={{marginBottom: '20px'}} fontWeight='bold'><AccessTimeIcon fontSize='inherit' sx={{marginBottom: '-2px', marginRight: '4px'}}/>{start.toTimeString().slice(0,5)} - {end.toTimeString().slice(0,5)}</Typography>
         <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
           <Typography><span style={{fontWeight: 'bold'}}>Crew Position:</span> {slot.name} </Typography>
         </Box>
@@ -73,10 +76,11 @@ export const TimeSlot = ({ slot, type, toggleRefresh }) => {
           <Typography><span style={{fontWeight: 'bold'}}>Description:</span> {slot.description} </Typography>
         </Box>
       </CardContent>
+      <hr style={{width: '100%'}}/>
       <CardActions sx={{display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
         { type === 'replacement' ?
-          <Button size="small" variant='contained' onClick={handlePickUp}>Pick Up Shift</Button> :
-          <Button size="small" variant='contained' color="secondary" onClick={handleReplacement}>I Can't Make It</Button>
+          <Typography onClick={handlePickUp} fontWeight='bold' sx={{cursor: 'pointer', width: '100%', paddingY: '10px', marginTop: '-10px', borderRadius: '8px', "&:hover": {backgroundColor: "#242526",}}}>PICK UP SHIFT</Typography> :
+          <Typography onClick={handleReplacement} fontWeight='bold' sx={{cursor: 'pointer', width: '100%', paddingY: '10px', marginTop: '-10px', borderRadius: '8px', "&:hover": {backgroundColor: "#3a3b3c",}}}>I CAN'T MAKE IT</Typography>
         }
         
         

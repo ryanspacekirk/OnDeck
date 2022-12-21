@@ -49,8 +49,8 @@ const Home = () => {
           </Typography>
         </Box>
         <Stack justifyContent="center" direction="row" spacing={2} sx={{paddingTop: '50px'}}>
-          <Button onClick={(e) => handleLogin(setShowLogin)} variant='contained' size='large'> LOG IN</Button>
-          <Button onClick={(e) => handleCreate(setShowCreateAccount)} variant='contained' size='large'> Create Account</Button>
+          <Button onClick={(e) => handleLogin(setShowLogin)} variant='contained' size='large' sx={{backgroundColor: '#1da1f2', color: 'white'}}> LOG IN</Button>
+          <Button onClick={(e) => handleCreate(setShowCreateAccount)} variant='contained' size='large' sx={{backgroundColor: '#1da1f2', color: 'white'}}> Create Account</Button>
         </Stack>
         {showLogin ? <Login showLogin={setShowLogin} /> : <Blank/>}
         {showCreateAccount ? <CreateAccount showCreate={setShowCreateAccount} /> : <Blank/>}
