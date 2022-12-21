@@ -26,7 +26,7 @@ const style = {
 
 
 
-const FindReplacement = ({ showFindReplacement, shiftSelected, shift, members, shifts, setShifts }) => {
+const FindReplacement = ({ showFindReplacement, shiftSelected, shift, members, shifts, setShifts, adjusted }) => {
   let [findReplacementOpen, setFindReplacementOpen] = useState(true);
   let [eligibleMembers, setEligibleMembers] = useState([]);
 
@@ -93,7 +93,7 @@ const FindReplacement = ({ showFindReplacement, shiftSelected, shift, members, s
           {eligibleMembers.map((member) => {
             return (
             <Grid item xs={12}>
-              <EligibleMemberCard key={member} member={member} replacementShift={shift} allShifts={shifts}  />
+              <EligibleMemberCard key={member} member={member} replacementShift={shift} allShifts={shifts} adjusted={adjusted}  />
             </Grid>
             );
         })}

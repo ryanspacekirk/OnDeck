@@ -33,6 +33,8 @@ const LeaderProfile = () => {
   let [approvalsPending, setApprovalsPending] = useState([]);
   let [allShifts, setAllShifts] = useState([]);
 
+  let [adjustedShifts, setAdjustedShifts] = useState([]);
+
   //reroutes if user doesn't have access
   useEffect(() => {
     if (user !== null) {
@@ -83,9 +85,20 @@ const LeaderProfile = () => {
 
     //Need to pull all the items awaiting for approval
 
+    const getSwappedShifts = async () => {
+      try{
+        let res = await axios.get(ApiUrl + '/adjusted_shifts', { withCredentials: true });
+        setAdjustedShifts(res.data);
 
+      }catch(e){
+        console.log('Error finding swapped shifts  in LeaderProfile:', e);
+      }
+
+    }
         //Need to pull all the items awaiting for approval
         generateOverview(memberList, setOverivewData, allShifts);
+        getSwappedShifts();
+        
         
     }, []);
 
@@ -99,6 +112,7 @@ const LeaderProfile = () => {
     filterPending(allShifts, setApprovalsPending);
 
 
+
   }, [memberList])
 
   useEffect(() => {
@@ -110,6 +124,7 @@ const LeaderProfile = () => {
     else {
       setShowFindReplacement(false);
     }
+    console.log("Adjusted shifts:", adjustedShifts);
 
 
 
@@ -174,7 +189,7 @@ const LeaderProfile = () => {
                 <Card> <Typography display="inline" variant='h6'> Currently Available:</Typography> <Typography display="inline" variant='h4'>{overviewData.numSVOAvail}</Typography></Card>
               </Grid>
               <Grid item xs={4}>
-                <Card><Typography display="inline" variant='h6'> Currently Available:</Typography> <Typography display="inline" variant='h4'>{overviewData.numSVO}</Typography></Card>
+                <Card><Typography display="inline" variant='h6'> Currently Available:</Typography> <Typography display="inline" variant='h4'>{overviewData.numGSOAvail}</Typography></Card>
               </Grid>
             </Grid>
           </Box>
@@ -219,7 +234,7 @@ const LeaderProfile = () => {
             </Grid>
           </Grid>          
           </Box>
-          {showFindReplacement ? <FindReplacement key={shiftSelected.id} showFindReplacement={setShowFindReplacement} shiftSelected={setShiftSelected} shift={shiftSelected}   members={memberList} shifts={allShifts} setShifts={setAllShifts}/> : <Blank />}
+          {showFindReplacement ? <FindReplacement key={shiftSelected.id} showFindReplacement={setShowFindReplacement} shiftSelected={setShiftSelected} shift={shiftSelected}   members={memberList} shifts={allShifts} setShifts={setAllShifts} adjusted={adjustedShifts}/> : <Blank />}
             
 
         </Container>

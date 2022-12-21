@@ -7,9 +7,17 @@ const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", 
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const dayMili = 86400000;
 export const dateInfo = (isoDate) => {
+  let returnInfo;
+  if(isoDate === "None Found"){
+    returnInfo = "No Recent Shift"
+  }
+  else{
+    let tempDate = new Date(isoDate);
+    returnInfo = days[tempDate.getDay()] + ', ' + tempDate.getDate() + ', ' + months[tempDate.getMonth()];
+
+  }
   
-  let tempDate = new Date(isoDate);
-  let returnInfo = days[tempDate.getDay()] + ', ' + tempDate.getDate() + ', ' + months[tempDate.getMonth()];
+  
   
   return returnInfo;
 }
@@ -293,5 +301,26 @@ export const generateNumReplacements =  (shiftDate, members, postionID, shifts) 
 
   }));
   return timeEligible.length;
+
+}
+
+export const inspector = (adjustments, setter, member) =>{
+  let returnVal = {
+    dropped:0,
+    picked:0
+  }
+  let numDropped = 0;
+  let numPicked = 0;
+  adjustments.forEach((adjustment) => {
+    if(adjustment.removed_member_id === member.id){
+      returnVal.dropped++;
+    }
+
+    if(adjustment.added_member_id === member.id){
+      returnVal.picked++;
+    }
+
+  })
+  setter(returnVal);
 
 }
