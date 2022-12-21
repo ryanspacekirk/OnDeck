@@ -1,7 +1,7 @@
 import { Button, Card, CardActionArea, CardActions, CardContent, CardHeader, Collapse, Typography, Alert } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import IconButton from '@mui/material/IconButton';
-import { memberString, dateInfo, timeInfo, shiftHelper } from "../helpers";
+import { memberString, dateInfo, timeInfo, shiftHelper, inspector } from "../helpers";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { useEffect, useState } from "react";
 import config from "../config";
@@ -20,9 +20,10 @@ const ExpandMore = styled((props) => {
   }),
 }));
 
-const EligibleMemberCard = ({ member, replacementShift, allShifts }) => {
+const EligibleMemberCard = ({ member, replacementShift, allShifts, adjusted }) => {
   let [expanded, setExpanded] = useState(false);
   let [succesSwap, setSuccessSwap] = useState(false);
+  let [adjustedVals, setAdjustedVals] = useState({dropped:0, picked:0})
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -61,8 +62,9 @@ const EligibleMemberCard = ({ member, replacementShift, allShifts }) => {
     
   }
   useEffect(() => {
-    shiftHelper(member, allShifts)
-  })
+    shiftHelper(member, allShifts);
+    inspector(adjusted, setAdjustedVals, member);
+  }, [])
 
   return(
     <div className="EligibleMemberCard">
@@ -99,11 +101,11 @@ const EligibleMemberCard = ({ member, replacementShift, allShifts }) => {
             </Typography>
 
             <Typography mt={1}>
-              Number of shifts dropped:
+              Number of shifts dropped: {adjustedVals.dropped}
             </Typography>
 
             <Typography mt={1} mb={1}>
-              Number of shifts picked up:
+              Number of shifts picked up: {adjustedVals.picked}
             </Typography>
             
             <Button onClick={handleReassign} variant="contained" >Assign to Shift</Button>

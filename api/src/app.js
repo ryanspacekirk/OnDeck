@@ -332,5 +332,19 @@ app.delete("/time_slots/:id", validSession, async (req, res) => {
     }
 })
 
+
+//Functionality for the adjusted shifts table. 
+app.get("/adjusted_shifts", validSession, async (req, res) => {
+  try{
+    const adjustedShifts = await knex('adjusted_assignments');
+    res.status(200).send(adjustedShifts);
+    
+  }catch(err){
+    console.log('Error getting adjusted shifts', err);
+  }
+}) 
+
+
+
 module.exports = app;
 
