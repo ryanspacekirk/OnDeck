@@ -195,6 +195,9 @@ const LeaderProfile = () => {
     }, [shiftsNeedingReplacements]);
 
 
+
+
+
   return (
       <div className='LeaderProfile'>
         <Paper >
@@ -204,29 +207,29 @@ const LeaderProfile = () => {
           <Box>
             <Grid container spacing={2} mt={2}>
               <Grid item xs={4}>
-                <Card  elevation={4} > <Typography   variant='h6' align='center'> Total Commanders:</Typography> <Typography   variant='h4' align="center">{overviewData.numCommander}</Typography></Card>
+                <Card  elevation={4} sx={{borderRadius:"8px"}}> <Typography   variant='h6' align='center' sx={{fontWeight:"bold"}}> Commanders</Typography> <Typography   variant='h4' align="center" sx={{fontWeight:"bold"}}>{overviewData.numCommander}</Typography></Card>
               </Grid>
               <Grid item xs={4}>
-                <Card  elevation={4} > <Typography align='center' variant='h6'> Total SVOs:</Typography> <Typography align='center' variant='h4'>{overviewData.numSVO}</Typography></Card> 
+                <Card  elevation={4} sx={{borderRadius:"8px"}}> <Typography align='center' variant='h6' sx={{fontWeight:"bold"}}> SVOs</Typography> <Typography align='center' variant='h4' sx={{fontWeight:"bold"}}>{overviewData.numSVO}</Typography></Card> 
               </Grid>
               <Grid item xs={4}>
-                <Card elevation={4} > <Typography align='center' variant='h6'> Total GSOs:</Typography> <Typography align='center' variant='h4'>{overviewData.numGSO}</Typography></Card>
+                <Card elevation={4} sx={{borderRadius:"8px"}}> <Typography align='center' variant='h6' sx={{fontWeight:"bold"}}> GSOs</Typography> <Typography align='center' variant='h4' sx={{fontWeight:"bold"}}>{overviewData.numGSO}</Typography></Card>
               </Grid>
               <Grid item xs={4}>
-                <Card elevation={6} > <Typography  align='center' variant='h6'> Currently Available:</Typography> <Typography align='center' variant='h4'>{overviewData.numCommanderAvail}</Typography></Card>
+                <Card elevation={6} sx={{borderRadius:"8px"}}> <Typography  align='center' variant='h6' sx={{fontWeight:"bold"}}> Available</Typography> <Typography align='center' variant='h4' sx={{fontWeight:"bold"}}>{overviewData.numCommanderAvail}</Typography></Card>
               </Grid>
               <Grid item xs={4}>
-                <Card elevation={6} > <Typography align='center' variant='h6'> Currently Available:</Typography> <Typography align='center' variant='h4'>{overviewData.numSVOAvail}</Typography></Card>
+                <Card elevation={6} sx={{borderRadius:"8px"}}> <Typography align='center' variant='h6' sx={{fontWeight:"bold"}}> Available</Typography> <Typography align='center' variant='h4' sx={{fontWeight:"bold"}}>{overviewData.numSVOAvail}</Typography></Card>
               </Grid>
               <Grid item xs={4}>
-                <Card elevation={6} ><Typography align='center' variant='h6'> Currently Available:</Typography> <Typography align='center' variant='h4'>{overviewData.numGSOAvail}</Typography></Card>
+                <Card elevation={6} sx={{borderRadius:"8px"}}><Typography align='center' variant='h6' sx={{fontWeight:"bold"}}> Available</Typography> <Typography align='center' variant='h4' sx={{fontWeight:"bold"}}>{overviewData.numGSOAvail}</Typography></Card>
               </Grid>
             </Grid>
           </Box>
           <Grid container spacing={6} mt={2}>
             <Grid item xs={6} >
               <Paper elevation={4} >
-                <Box><Typography variant='h4' align='center'  > Leadership Input Required</Typography></Box>
+                <Box><Typography variant='h4' align='center'  pt={3} sx={{fontWeight:"bold"}}> Leadership Input Required</Typography></Box>
               
               <Box>
               <Grid container spacing={2} mt={2}>
@@ -265,7 +268,7 @@ const LeaderProfile = () => {
                 {/* Right side of the display */}
               <Grid item xs={6}>
                 <Paper elevation={4} >
-                <Typography variant='h4' align='center'>Shifts Waiting to be Filled</Typography>
+                <Typography variant='h4' align='center' pt={3} sx={{fontWeight:"bold"}}>Shifts Waiting to be Filled</Typography>
                 <Box pb={10}>
                 <Grid container spacing={2} mt={2}>
                 {shiftsNeedingReplacements.map(shift => {
