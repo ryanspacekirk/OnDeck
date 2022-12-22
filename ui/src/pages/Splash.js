@@ -153,13 +153,13 @@ const Splash = () => {
         <div className='Splash' >
             {render() ? <><Typography variant='h6' align='center' sx={{ marginTop: '20px', fontWeight:"bold" }}>Loading...</Typography></>
                 : <>
-                    <Grid container justifyContent="space-between" direction="row" alignItems="baseline" sx={{ marginTop: '20px', marginBottom: '20px', fontWeight:"bold", color:"white" }}>
+                    <Grid container justifyContent="center" direction="row" sx={{ marginTop: '20px', marginBottom: '20px' }}>
                         {/* <Button size="small" variant='contained' sx={{ marginLeft: '40px' }} onClick={() => navigate('/member')}>Return to Profile</Button> */}
-                        <Typography variant='h4' fontWeight='bold' color="white">Shift Overview</Typography>
+                        <Typography variant='h4' fontWeight='bold' color="#e4e6eb">Shift Overview</Typography>
                         {/* <Box sx={{ width: 200 }}></Box> */}
                     </Grid>
 
-                    <Card sx={{ marginLeft: '40px', marginRight: '40px' }}>
+                    <Card sx={{ marginLeft: '60px', marginRight: '60px' , marginBottom: '20px', background: '#242526', borderRadius: '8px', paddingBottom: '20px'}} color="3a3b3c">
                         <Grid container direction="row" justifyContent="space-evenly" sx={{ marginTop: '20px' }}>
                             <Grid item xl={5} lg={5} md={7} sm={9}>
                                 <PieGraph data={pieChartData} type={"pie"} palette={["#73d47f", "#fb7764", "#fed85e"]} />
