@@ -39,10 +39,12 @@ export default function PieGraph({ data, type, palette }) {
                 </Label>
             </Series>
 
-            <Size width={500} height={400} />
+            <Size width={550} height={400} />
             <Legend
                 horizontalAlignment="right"
                 verticalAlignment="top"
+                backgroundColor="#3a3b3c"
+                font={{color: "#e4e6eb"}}
             />
 
             <Animation
